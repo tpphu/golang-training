@@ -15,8 +15,8 @@ import (
 
 type Note struct {
 	gorm.Model
-	Title  string
-	Status bool
+	Title     string
+	Completed bool
 }
 
 type Pagination struct {
@@ -49,7 +49,10 @@ func (self *Pagination) GetLimit() uint {
 }
 
 func main() {
-	db, _ := gorm.Open("mysql", "default:secret@/default?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", "default:secret@/notes?charset=utf8&parseTime=True&loc=Local")
+	if err != nil {
+		panic(err)
+	}
 	//defer db.Close()
 	db.AutoMigrate(&Note{})
 
