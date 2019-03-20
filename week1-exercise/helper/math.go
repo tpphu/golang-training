@@ -30,3 +30,13 @@ func Max(list interface{}) interface{} {
 	}
 	return max.Interface()
 }
+
+type convert1 func(int) int
+
+func Map2(list []int, fn convert1) []int {
+	result := make([]int, len(list))
+	for i := 0; i < len(list); i++ {
+		result[i] = fn(list[i])
+	}
+	return result
+}
