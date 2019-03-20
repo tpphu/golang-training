@@ -77,6 +77,7 @@ func Map2(list interface{}, fn interface{}) interface{} {
 	return retResult.Interface()
 }
 
+// list := []int{1, 2, 3}
 // list := []interface{}{1, false, "phu"}
 // func Map3(list []interface{}, fn interface{}) interface{} {
 

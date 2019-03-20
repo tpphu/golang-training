@@ -55,3 +55,37 @@ func Contains(list interface{}, v interface{}) bool {
 	// 5. Tra ve ket qua
 	return result
 }
+
+func isFunc(v interface{}) bool {
+	return reflect.TypeOf(v).Kind() == reflect.Func
+}
+
+// Find can return first item matched in array
+func Find2(arr interface{}, predicate interface{}) interface{} {
+	arrValue := reflect.ValueOf(arr)
+	predicateValue := reflect.ValueOf(predicate)
+
+	//
+	var res interface{}
+
+	if !isFunc(predicate) {
+		for index := 0; index < arrValue.Len(); index++ {
+			if predicateValue.Interface() == arrValue.Index(index).Interface() {
+				res = arrValue.Index(index).Interface()
+				break
+			}
+		}
+	} else {
+		for index := 0; index < arrValue.Len(); index++ {
+			elem := arrValue.Index(index)
+			in := []reflect.Value{elem}
+			result := predicateValue.Call(in)[0]
+			if result.Bool() == true {
+				res = arrValue.Index(index).Interface()
+				break
+			}
+		}
+	}
+
+	return res
+}
