@@ -1,6 +1,9 @@
 package helper
 
-import "reflect"
+import (
+	"reflect"
+	"strings"
+)
 
 func Find(arr interface{}, predicate interface{}) interface{} {
 
