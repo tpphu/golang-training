@@ -8,7 +8,7 @@ func SquareArea(strArr []string, x0, y0 int) (area int) {
 	if strArr[x0][y0] != '1' {
 		return 0
 	}
-	vertex := 1
+	vertex := 0
 	isStop := false
 	for ; ; vertex++ {
 		if vertex >= (cols-y0) || vertex >= (rows-x0) {
@@ -17,14 +17,14 @@ func SquareArea(strArr []string, x0, y0 int) (area int) {
 		vRows := x0 + vertex
 		vCols := y0 + vertex
 		// Theo dong
-		for i := y0; i < vCols; i++ {			
+		for i := y0; i <= vCols; i++ {			
 			if strArr[vRows][i] != '1' {
 				isStop = true
 				break
 			}
 		}
 		// Theo cot
-		for i := x0; i < vRows; i++ {
+		for i := x0; i <= vRows; i++ {
 			if strArr[i][vCols] != '1' {
 				isStop = true
 				break
@@ -35,7 +35,7 @@ func SquareArea(strArr []string, x0, y0 int) (area int) {
 			break
 		}
 	}
-	return vertex * vertex
+	return vertex  * vertex
 }
 
 /**
@@ -49,6 +49,7 @@ func MaximalSquare(strArr []string) (maxArea int) {
 	for x := 0; x < rows; x++ {
 		for y := 0; y < cols; y++ {
 			area := SquareArea(strArr, x, y)
+			// fmt.Printf("square at [%d, %d] is %d\n", x, y, area)
 			if area > maxArea {
 				maxArea = area
 			}
@@ -65,5 +66,5 @@ func main() {
 }
 
 func readline() []string{
-	return []string{"10100", "10111", "11111", "10010"}
+	return []string{"1111", "1101", "1111", "0111"}
 }
