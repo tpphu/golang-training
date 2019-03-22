@@ -5,24 +5,32 @@ import "fmt"
 func SquareArea(strArr []string, x0, y0 int) (area int) {
 	rows := len(strArr)
 	cols := len(strArr[0])
-	vertex := 0
+	if strArr[x0][y0] != '1' {
+		return 0
+	}
+	vertex := 1
 	isStop := false
 	for ; ; vertex++ {
-		if vertex >= (rows-y0) || vertex >= (cols-x0) {
+		if vertex >= (cols-y0) || vertex >= (rows-x0) {
 			break
 		}
-		for y := y0 + vertex; y < cols; y++ {
-			if strArr[y0+vertex][y] != '1' {
+		vRows := x0 + vertex
+		vCols := y0 + vertex
+		// Theo dong
+		for i := y0; i < vCols; i++ {			
+			if strArr[vRows][i] != '1' {
 				isStop = true
 				break
 			}
 		}
-		for x := x0 + vertex; x < rows; x++ {
-			if strArr[x][x0+vertex] != '1' {
+		// Theo cot
+		for i := x0; i < vRows; i++ {
+			if strArr[i][vCols] != '1' {
 				isStop = true
 				break
 			}
 		}
+		
 		if isStop {
 			break
 		}
@@ -54,10 +62,8 @@ func main() {
 	// do not modify below here, readline is our function
 	// that properly reads in the input for you
 	fmt.Println(MaximalSquare(readline()))
-
 }
 
-func readline() []string {
-	// return []string{"0111", "1111", "1111", "1111"}
+func readline() []string{
 	return []string{"10100", "10111", "11111", "10010"}
 }
