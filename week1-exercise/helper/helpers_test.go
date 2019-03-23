@@ -14,9 +14,9 @@ import "testing"
 
 func TestIsEmpty(t *testing.T) {
 	var v int32 = 0
-	expected := false
-	result := IsEmpty(v)
-	if result != expected {
+	expected := true
+	actual := IsEmpty(v)
+	if actual != expected {
 		t.Error("Result should be false")
 	}
 }
