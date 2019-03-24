@@ -24,6 +24,14 @@ var extractPublishDateVietNamNet = func(selector string, doc *goquery.Document) 
 	return publishedDate
 }
 
+func extractAuthorVietNamNet(selector string, doc *goquery.Document) string {
+	if selector == "" {
+		return ""
+	}
+	value := doc.Find(selector).Last().Text()
+	return strings.TrimSpace(value)
+}
+
 func CreateVietNamNetCrawler() ICrawler {
 	selector := Selector{
 		Title:         "title",
@@ -35,5 +43,6 @@ func CreateVietNamNetCrawler() ICrawler {
 	crawler.selector = selector
 	crawler.parser = createDefaultParser()
 	crawler.parser.extractPublishDate = extractPublishDateVietNamNet
+	crawler.parser.extractAuthor = extractAuthorVietNamNet
 	return crawler
 }
