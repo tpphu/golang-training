@@ -19,29 +19,19 @@ type Parser struct {
 
 func createDefaultParser() Parser {
 	parser := Parser{
-		extractPublishDate: extractPublishDate,
-		extractContent: extractContent,
-		extractAuthor: extractAuthor,
-		extractTitle: extractTitle,
+		extractPublishDate: extractNotYetImplement,
+		extractContent: extractSimple,
+		extractAuthor: extractSimple,
+		extractTitle: extractSimple,
 	}
 	return parser
 }
 
-func extractPublishDate(selector string, doc *goquery.Document) time.Time {
-	panic("Should implement")
+func extractNotYetImplement(selector string, doc *goquery.Document) time.Time {
+	panic("Should implement at yours")
 }
 
-func extractContent(selector string, doc *goquery.Document) string {
-	value := extract(selector, doc)
-	return strings.TrimSpace(value)
-}
-
-func extractAuthor(selector string, doc *goquery.Document) string {
-	value := extract(selector, doc)
-	return strings.TrimSpace(value)
-}
-
-func extractTitle(selector string, doc *goquery.Document) string {
+func extractSimple(selector string, doc *goquery.Document) string {
 	value := extract(selector, doc)
 	return strings.TrimSpace(value)
 }
