@@ -10,7 +10,8 @@ import (
 // Tra ra mot channel
 func gen(nums ...int) <-chan int {
 	// Run Step 1
-	out := make(chan int, 10) //capacity
+	// Bufferred Channel
+	out := make(chan int, 4) //capacity
 	// Run Step 2
 	go func() {
 		for _, n := range nums {
@@ -26,6 +27,7 @@ func gen(nums ...int) <-chan int {
 }
 
 func sq(in <-chan int) <-chan int {
+	// Unbufferred Channel
 	out := make(chan int)
 	go func() {
 		for n := range in {
@@ -44,6 +46,9 @@ func main() {
 
 	// Consume the output.
 	go func() {
+		// Vi out la Unbufferred Channel
+		// nen khi sleep, thi func sq khong the push them dc value vao sq channel
+		// do vay ban se khong thay dong in ra
 		for v := range out {
 			time.Sleep(1 * time.Second)
 			fmt.Printf("\n[OUT]: %d", v)
