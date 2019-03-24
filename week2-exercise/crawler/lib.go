@@ -31,7 +31,10 @@ type Crawler struct {
 }
 
 func (self *Crawler) Parse(res *http.Response) Data {
-	doc, _ := goquery.NewDocumentFromResponse(res)
+	doc, err := goquery.NewDocumentFromResponse(res)
+	if err != nil {
+		panic(err)
+	}
 	data := Data{}
 	data.Title = self.parser.extractTitle(self.selector.Title, doc)
 	data.Author = self.parser.extractAuthor(self.selector.Author, doc)
