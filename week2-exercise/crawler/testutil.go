@@ -9,11 +9,11 @@ import (
 func generateResponse(dataPathFile, url string) *http.Response {
 	// 1. Create Reponse
 	w := httptest.NewRecorder()
-	data, _ := ioutil.ReadFile("./data/thesaigontimes.html")
+	data, _ := ioutil.ReadFile(dataPathFile)
 	w.Write(data)
 	resp := w.Result()
 	// 2. Append Request
-	req := httptest.NewRequest("GET", "https://www.thesaigontimes.vn/274113/bao-giay-van-thu-vi.html", nil)
+	req := httptest.NewRequest("GET", url, nil)
 	// 2.1 Cho nay that la chuoi
 	resp.Request = req
 
