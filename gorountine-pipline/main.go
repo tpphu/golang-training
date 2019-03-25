@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"time"
 )
 
@@ -40,6 +41,8 @@ func sq(in <-chan int) <-chan int {
 }
 
 func main() {
+	fmt.Println("Num CPUs:", runtime.NumCPU())
+	runtime.GOMAXPROCS(1)
 	// Set up the pipeline.
 	c := gen(2, 3, 4, 5)
 	out := sq(c)
