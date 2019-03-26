@@ -1,7 +1,9 @@
 package crawler
 
 import (
+	"errors"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -41,4 +43,22 @@ func (self *Crawler) Parse(res *http.Response) Data {
 	data.Content = self.parser.extractContent(self.selector.Content, doc)
 	data.PublishedDate = self.parser.extractPublishDate(self.selector.PublishedDate, doc)
 	return data
+}
+
+var (
+	ErrorParseNotFound = errors.New("Parser Not Found")
+)
+
+func FindParserByUrl(href string) (ICrawler, error) {
+	u, err := url.Parse(href)
+	if err != nil {
+		return nil, err
+	}
+	switch u.Host {
+	case "www.thesaigontimes.vn":
+		return CreateSaiGonTimeCrawler(), nil
+	case "vietnamnet.vn":
+		return CreateVietNamNetCrawler(), nil
+	}
+	return nil, ErrorParseNotFound
 }
