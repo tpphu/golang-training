@@ -8,10 +8,11 @@ import (
 
 type Watcher struct {
 	//load info
-	DBLoadUrlReq   int
-	DBLoadUrlRes   int
-	DBLoadUrlErr   int
-	DBLoadUrlTotal int
+	DBLoadUrlReq    int
+	DBLoadUrlRes    int
+	DBLoadUrlErr    int
+	DBLoadUrlTotal  int
+	DBLoadUrlLastId uint
 	//download info
 	NumHTTPReq int
 	NumHTTPRes int

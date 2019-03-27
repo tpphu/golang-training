@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	"./crawler"
@@ -13,9 +15,11 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-var SaiGonTime crawler.ICrawler = crawler.CreateSaiGonTimeCrawler()
-var VietNamNet crawler.ICrawler = crawler.CreateVietNamNetCrawler()
+// var SaiGonTime crawler.ICrawler = crawler.CreateSaiGonTimeCrawler()
+// var VietNamNet crawler.ICrawler = crawler.CreateVietNamNetCrawler()
 var DBConnectString = "default:secret@/crawler?charset=utf8&parseTime=True&loc=Local"
+var totalInstance int = 1
+var nthInstance int = 0
 
 func main() {
 	// Connect vo DB MySQL
@@ -25,6 +29,11 @@ func main() {
 	}
 	db.LogMode(false)
 	db.AutoMigrate(&model.Url{}, &model.Article{})
+	// go run main.go 2 0
+	// go run main.go 2 1
+	args := os.Args[1:]
+	totalInstance, _ = strconv.Atoi(args[0])
+	nthInstance, _ = strconv.Atoi(args[1])
 	// Tao mot cai watcher
 	watcher := &helper.Watcher{}
 	// Chuong trinh chinh cua minh o day
@@ -50,10 +59,13 @@ func load(db *gorm.DB, watcher *helper.Watcher) <-chan model.Url {
 			urls := []model.Url{}
 			watcher.DBLoadUrlReq++
 			// 1. Lay da cac url can crawl
-			err := db.Where("state = ? AND status = ?",
+			err := db.Where("(id % ? = ? AND id > ?) AND state = ? AND status = ?",
+				totalInstance,
+				nthInstance,
+				watcher.DBLoadUrlLastId,
 				model.UrlStateIdle,
 				model.UrlStatusReady).
-				Limit(1).
+				Limit(10).
 				Find(&urls).
 				Error
 
@@ -66,6 +78,12 @@ func load(db *gorm.DB, watcher *helper.Watcher) <-chan model.Url {
 			// 2. Lay du lieu crawl va push vao channel
 			for _, url := range urls {
 				urlCrawlChan <- url
+				if url.ID > watcher.DBLoadUrlLastId {
+					// Co the ket hop voi UpdatedAt de ra mot solution
+					// Ve viec crawl lai nhung url bi loi
+					// Co the ket hop voi them mot thong so ve so lan bi loi
+					watcher.DBLoadUrlLastId = url.ID
+				}
 			}
 			time.Sleep(time.Second * 3)
 		}
@@ -78,31 +96,33 @@ func crawl(db *gorm.DB, watcher *helper.Watcher, urlCrawlChan <-chan model.Url) 
 	urlUpdateChan := make(chan model.Url, 10)
 	go func() {
 		for url := range urlCrawlChan {
-			var err error
-			watcher.NumHTTPReq++
-			// 1. Download cai noi dung ve
-			resp, err := http.Get(url.Url)
-			watcher.NumHTTPRes++
-			if err != nil {
-				watcher.NumHTTPErr++
-				fmt.Println("Download | error:", err)
-			}
-			// 2. Tim cai parse tuong ung cho cai url
-			parser, err := crawler.FindParserByUrl(url.Url)
-			if err != nil {
-				fmt.Println("Find parser | error:", err)
-			}
-			// 3. Parse cai noi dung
-			data := parser.Parse(resp)
-			// 4. Dem cai noi dung va gan vao article
-			article := model.Article{
-				UrlID: url.ID,
-			}
-			helper.FillDataToArticle(&article, data) // huong function
-			// article.Fill(data) //@deprecated //oop
-			// 5. Day du lieu vao channel
-			articleChan <- article
-			urlUpdateChan <- url
+			go func(url model.Url) {
+				var err error
+				watcher.NumHTTPReq++
+				// 1. Download cai noi dung ve
+				resp, err := http.Get(url.Url)
+				watcher.NumHTTPRes++
+				if err != nil {
+					watcher.NumHTTPErr++
+					fmt.Println("Download | error:", err)
+				}
+				// 2. Tim cai parse tuong ung cho cai url
+				parser, err := crawler.FindParserByUrl(url.Url)
+				if err != nil {
+					fmt.Println("Find parser | error:", err)
+				}
+				// 3. Parse cai noi dung
+				data := parser.Parse(resp)
+				// 4. Dem cai noi dung va gan vao article
+				article := model.Article{
+					UrlID: url.ID,
+				}
+				helper.FillDataToArticle(&article, data) // huong function
+				// article.Fill(data) //@deprecated //oop
+				// 5. Day du lieu vao channel
+				articleChan <- article
+				urlUpdateChan <- url
+			}(url)
 		}
 	}()
 	return articleChan, urlUpdateChan
