@@ -31,6 +31,7 @@ func extractAuthorVietNamNet(selector string, doc *goquery.Document) string {
 }
 
 func CreateVietNamNetCrawler() ICrawler {
+	// Selector de extract tu html download ve dc
 	selector := Selector{
 		Title:         "title",
 		PublishedDate: "#ArticleHolder .ArticleDate.right",

@@ -18,17 +18,23 @@ var VietNamNet crawler.ICrawler = crawler.CreateVietNamNetCrawler()
 var DBConnectString = "default:secret@/crawler?charset=utf8&parseTime=True&loc=Local"
 
 func main() {
+	// Connect vo DB MySQL
 	db, err := gorm.Open("mysql", DBConnectString)
 	if err != nil {
 		panic(err)
 	}
 	db.LogMode(false)
 	db.AutoMigrate(&model.Url{}, &model.Article{})
-
+	// Tao mot cai watcher
 	watcher := &helper.Watcher{}
-	urlCrawlChan := load(db, watcher)
+	// Chuong trinh chinh cua minh o day
+	// Step 1: Load urls need to crawl from [BD]
+	urlCrawlChan := load(db, watcher) // I/O : DB
+	// Step 2: download and parse/extract article from url: I/O: HTTP
 	articleChan, urlUpdateChan := crawl(db, watcher, urlCrawlChan)
+	// Step 3: Save lai nhung article vao db
 	save(db, watcher, articleChan)
+	// Step 4: La danh dau nhung cai url minh da crawl xong
 	update(db, watcher, urlUpdateChan)
 
 	for {
@@ -43,6 +49,7 @@ func load(db *gorm.DB, watcher *helper.Watcher) <-chan model.Url {
 		for {
 			urls := []model.Url{}
 			watcher.DBLoadUrlReq++
+			// 1. Lay da cac url can crawl
 			err := db.Where("state = ? AND status = ?",
 				model.UrlStateIdle,
 				model.UrlStatusReady).
@@ -56,6 +63,7 @@ func load(db *gorm.DB, watcher *helper.Watcher) <-chan model.Url {
 				fmt.Println(err)
 			}
 			watcher.DBLoadUrlTotal += len(urls)
+			// 2. Lay du lieu crawl va push vao channel
 			for _, url := range urls {
 				urlCrawlChan <- url
 			}
@@ -72,21 +80,27 @@ func crawl(db *gorm.DB, watcher *helper.Watcher, urlCrawlChan <-chan model.Url) 
 		for url := range urlCrawlChan {
 			var err error
 			watcher.NumHTTPReq++
+			// 1. Download cai noi dung ve
 			resp, err := http.Get(url.Url)
 			watcher.NumHTTPRes++
 			if err != nil {
 				watcher.NumHTTPErr++
 				fmt.Println("Download | error:", err)
 			}
+			// 2. Tim cai parse tuong ung cho cai url
 			parser, err := crawler.FindParserByUrl(url.Url)
 			if err != nil {
 				fmt.Println("Find parser | error:", err)
 			}
+			// 3. Parse cai noi dung
 			data := parser.Parse(resp)
+			// 4. Dem cai noi dung va gan vao article
 			article := model.Article{
 				UrlID: url.ID,
 			}
-			helper.FillDataToArticle(&article, data)
+			helper.FillDataToArticle(&article, data) // huong function
+			// article.Fill(data) //@deprecated //oop
+			// 5. Day du lieu vao channel
 			articleChan <- article
 			urlUpdateChan <- url
 		}
@@ -98,6 +112,7 @@ func save(db *gorm.DB, watcher *helper.Watcher, articleChan <-chan model.Article
 	go func() {
 		for article := range articleChan {
 			watcher.DBInsArticleReq++
+			// Insert du lieu vao db
 			err := db.Create(&article).Error
 			watcher.DBInsArticleRes++
 			if err != nil {
@@ -110,7 +125,7 @@ func save(db *gorm.DB, watcher *helper.Watcher, articleChan <-chan model.Article
 func update(db *gorm.DB, watcher *helper.Watcher, urlUpdateChan <-chan model.Url) {
 	go func() {
 		for url := range urlUpdateChan {
-			url.State = model.UrlStateRunning
+			url.State = model.UrlStateRunning //Idle
 			url.Status = model.UrlStatusSuccess
 			db.Save(&url)
 		}

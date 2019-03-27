@@ -24,6 +24,7 @@ var extractPublishDateSaiGonTime = func(selector string, doc *goquery.Document) 
 }
 
 func CreateSaiGonTimeCrawler() ICrawler {
+	// Tim khieu khai niem selector cua jQuery
 	selector := Selector{
 		Title:         "title",
 		PublishedDate: "#ctl00_cphContent_lblCreateDate",
