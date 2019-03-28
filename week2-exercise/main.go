@@ -47,7 +47,7 @@ func main() {
 	update(db, watcher, urlUpdateChan)
 
 	for {
-		watcher.Out()
+		// watcher.Out()
 		time.Sleep(1 * time.Second)
 	}
 }
@@ -96,6 +96,8 @@ func crawl(db *gorm.DB, watcher *helper.Watcher, urlCrawlChan <-chan model.Url) 
 	urlUpdateChan := make(chan model.Url, 10)
 	go func() {
 		for url := range urlCrawlChan {
+			//1. Can chay download url thanh cac goroutines
+			// de tang toc viec crawl
 			go func(url model.Url) {
 				var err error
 				watcher.NumHTTPReq++
@@ -123,6 +125,9 @@ func crawl(db *gorm.DB, watcher *helper.Watcher, urlCrawlChan <-chan model.Url) 
 				articleChan <- article
 				urlUpdateChan <- url
 			}(url)
+			// 2. Can limit so luong request ra ngoai
+			// if watcher.NumHTTPReq - watcher.NumHTTPReq > 100
+			// tam thoi ngung download nua
 		}
 	}()
 	return articleChan, urlUpdateChan
@@ -130,13 +135,20 @@ func crawl(db *gorm.DB, watcher *helper.Watcher, urlCrawlChan <-chan model.Url) 
 
 func save(db *gorm.DB, watcher *helper.Watcher, articleChan <-chan model.Article) {
 	go func() {
-		for article := range articleChan {
-			watcher.DBInsArticleReq++
-			// Insert du lieu vao db
-			err := db.Create(&article).Error
-			watcher.DBInsArticleRes++
-			if err != nil {
-				watcher.DBInsArticleErr++
+		articles := []model.Article{}
+		for {
+			select {
+			case article := <-articleChan:
+				articles = append(articles, article)
+				if len(articles) >= 5 {
+					insertArticles(db, watcher, articles)
+					articles = []model.Article{}
+				}
+			case <-time.After(3 * time.Second):
+				if len(articles) > 0 {
+					insertArticles(db, watcher, articles)
+					articles = []model.Article{}
+				}
 			}
 		}
 	}()
@@ -150,4 +162,14 @@ func update(db *gorm.DB, watcher *helper.Watcher, urlUpdateChan <-chan model.Url
 			db.Save(&url)
 		}
 	}()
+}
+
+func insertArticles(db *gorm.DB, watcher *helper.Watcher, articles []model.Article) {
+	watcher.DBInsArticleReq++
+	err := helper.BatchInsert(db, articles)
+	watcher.DBInsArticleRes++
+	if err != nil {
+		fmt.Println("insertArticles | err:", err)
+		watcher.DBInsArticleErr++
+	}
 }
