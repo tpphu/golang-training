@@ -47,7 +47,7 @@ func main() {
 	update(db, watcher, urlUpdateChan)
 
 	for {
-		// watcher.Out()
+		watcher.Out()
 		time.Sleep(1 * time.Second)
 	}
 }
