@@ -138,12 +138,14 @@ func save(db *gorm.DB, watcher *helper.Watcher, articleChan <-chan model.Article
 		articles := []model.Article{}
 		for {
 			select {
+			// 1. Logic nay dam bao nhieu co nhieu hon n articles thi phai insert
 			case article := <-articleChan:
 				articles = append(articles, article)
 				if len(articles) >= 5 {
 					insertArticles(db, watcher, articles)
 					articles = []model.Article{}
 				}
+			// 2. Hoac neu sau thoi gian t giay, du chi co <n articles se van phai insert
 			case <-time.After(3 * time.Second):
 				if len(articles) > 0 {
 					insertArticles(db, watcher, articles)
