@@ -24,7 +24,7 @@ func main() {
 	db.AutoMigrate(&model.Note{})
 
 	r := gin.Default()
-	handler.InitRoutes(r)
+	handler.InitRoutes(r, db)
 
 	srv := &http.Server{
 		Addr:    ":8080",
