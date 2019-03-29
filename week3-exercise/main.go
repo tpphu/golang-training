@@ -23,6 +23,12 @@ func main() {
 	defer db.Close()
 	db.AutoMigrate(&model.Note{})
 
+	fileWriter, err := os.Create("access.log")
+	if err != nil {
+		panic(err)
+	}
+	gin.SetMode(gin.ReleaseMode)
+	gin.DefaultWriter = fileWriter
 	r := gin.Default()
 	handler.InitRoutes(r, db)
 
