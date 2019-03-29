@@ -32,7 +32,10 @@ func main() {
 	}
 
 	go func() {
-		srv.ListenAndServe()
+		err := srv.ListenAndServe()
+		if err != nil {
+			panic(err)
+		}
 	}()
 
 	quit := make(chan os.Signal)
