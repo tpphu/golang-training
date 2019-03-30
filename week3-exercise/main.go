@@ -16,6 +16,7 @@ import (
 )
 
 func main() {
+	// 1. Lien quan toi database
 	db, err := gorm.Open("mysql", "default:secret@/notes?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		panic(err)
@@ -23,15 +24,18 @@ func main() {
 	defer db.Close()
 	db.AutoMigrate(&model.Note{})
 
+	// 2. Write access log ra file & de giu lai cai Println -> Stdout
 	fileWriter, err := os.Create("access.log")
 	if err != nil {
 		panic(err)
 	}
 	gin.SetMode(gin.ReleaseMode)
 	gin.DefaultWriter = fileWriter
-	r := gin.Default()
-	handler.InitRoutes(r, db)
 
+	// 3. Tao ra router
+	r := gin.Default()
+	handler.InitRoutes(r, db) // Move cai code minh lam qua cho khac
+	// 4. Start chuong trinh
 	srv := &http.Server{
 		Addr:    ":8081",
 		Handler: r,
@@ -43,7 +47,7 @@ func main() {
 			panic(err)
 		}
 	}()
-
+	// 5. Handle stop chuong trinh
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
