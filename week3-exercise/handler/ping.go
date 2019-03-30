@@ -6,12 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var i int = 0
+var counter int = 0
 
 func pingHandler(c *gin.Context) {
-	i += 1
+	counter += 1
 	// Race condition => Hai CPU cung access vo 1 cai bien
-	// Atomic => co 100 request vao nhung expected: i = 100, actual: 80
-	c.Writer.Header().Set("Gia-Tri-X", strconv.Itoa(i))
+	// Atomic => co 100 request vao nhung expected: counter = 100, actual: 80
+	c.Writer.Header().Set("X-Counter", strconv.Itoa(counter))
 	c.String(201, "Pong\n")
 }
