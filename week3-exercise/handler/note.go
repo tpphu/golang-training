@@ -19,14 +19,8 @@ func NoteCreate(c *gin.Context, noteRepo repo.NoteRepo) (*model.Note, error) {
 	return noteRepo.Create(note)
 }
 
-var i int = 0
-
 func NoteGet(c *gin.Context, notePepo repo.NoteRepo) (*model.Note, error) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	// Race condition => Hai CPU cung access vo 1 cai bien
-	// Atomic => co 100 request vao nhung expected: i = 100, actual: 80
-	i += 1
-	c.Writer.Header().Set("Gia-Tri-X", strconv.Itoa(i))
 	return notePepo.Find(id)
 }
 

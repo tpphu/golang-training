@@ -64,10 +64,10 @@ func simpleMiddleware(c *gin.Context) {
 	// 1. Logic quan trong nhat la, xu ly ngung cai cai request
 	// 2. Tao ra cac du lieu de set vao context cho cai handler dung
 	// 3. Quyet dinh cho phep di tiep den cai middleware tiep theo hoac handler
-	if c.GetHeader("token") != "202cb962ac59075b964b07152d234b70" {
-		c.AbortWithStatus(400)
-		return
-	}
+	// if c.GetHeader("token") != "202cb962ac59075b964b07152d234b70" {
+	// 	c.AbortWithStatus(400)
+	// 	return
+	// }
 	fmt.Println("Print here for every request")
 	c.Next()
 }
