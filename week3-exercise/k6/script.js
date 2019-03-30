@@ -8,3 +8,11 @@ export default function() {
     "transaction time OK": (r) => r.timings.duration < 10
   });
 };
+
+// export default function() {
+//   let res = http.get("http://host.docker.internal:8081/note/1");
+//   check(res, {
+//     "status was 200": (r) => r.status == 200,
+//     "transaction time OK": (r) => r.timings.duration < 10
+//   });
+// };
