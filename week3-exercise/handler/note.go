@@ -14,7 +14,9 @@ import (
 func NoteCreate(c *gin.Context, noteRepo repo.NoteRepo) (*model.Note, error) {
 	// Tu context minh lay ra dc note
 	note := model.Note{}
-	c.ShouldBind(&note)
+	if err := c.ShouldBind(&note); err != nil {
+		return nil, err
+	}
 	// Dung repo de minh create dc note
 	return noteRepo.Create(note)
 }

@@ -54,7 +54,9 @@ func InitRoutes(engine *gin.Engine, db *gorm.DB) {
 
 func simpleReturnHandler(c *gin.Context, err error, result interface{}) {
 	if err != nil {
-		c.AbortWithError(400, err)
+		c.AbortWithStatusJSON(400, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 	c.JSON(200, result)
