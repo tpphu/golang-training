@@ -9,12 +9,6 @@ import (
 	"github.com/micro/go-micro"
 )
 
-/*
-
-Example usage of top level service initialisation
-
-*/
-
 type Greeter struct{}
 
 func (g *Greeter) Hello(ctx context.Context, req *proto.HelloRequest, rsp *proto.HelloResponse) error {
@@ -32,9 +26,7 @@ func main() {
 		}),
 	)
 
-	// Init will parse the command line flags. Any flags set will
-	// override the above settings. Options defined here will
-	// override anything set on the command line.
+	// Init
 	service.Init()
 
 	// Register handler
