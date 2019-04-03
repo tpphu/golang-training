@@ -1,6 +1,8 @@
 package mock
 
 import (
+	"errors"
+
 	"../helper"
 	"../model"
 	"github.com/stretchr/testify/mock"
@@ -11,6 +13,9 @@ type NoteRepoImpl struct {
 }
 
 func (self *NoteRepoImpl) Create(note model.Note) (*model.Note, error) {
+	if len(note.Title) > 255 {
+		return nil, errors.New(`Error 1406: Data too long for column 'title' at row 1`)
+	}
 	args := self.Called(note)
 	return args.Get(0).(*model.Note), args.Error(1)
 }

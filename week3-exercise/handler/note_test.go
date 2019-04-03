@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"math/rand"
 	"net/http/httptest"
 	"strings"
 	"testing"
@@ -14,6 +15,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
+
+func fakeString(n int) string {
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
 
 func buildMockContext(data string) *gin.Context {
 	w := httptest.NewRecorder()
@@ -53,7 +63,7 @@ func Test_NoteCreate_TitleHasMinLength(t *testing.T) {
 func Test_NoteCreate_TitleHasMaxLength(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
 	// 1. Chuan bi input dau vao cho ham CreateNote
-	largeStr := "Ngoài các yếu tố về performance, simple, security, thì mình đánh giá một framework phải có một cộng đồng hỗ trợ mạnh với hệ sinh thái về plugin và giải pháp đa dạng."
+	largeStr := fakeString(2000)
 	data := `{"title": "` + largeStr + `","completed": false}`
 	ctx := buildMockContext(data)
 	noteRepo := new(mock.NoteRepoImpl)
@@ -108,15 +118,10 @@ func Test_NoteCreate_TitleIsValid(t *testing.T) {
 	}
 }
 
-func Test_NoteCreate_TitleInValid(t *testing.T) {
+func Test_NoteCreate_TitleMaxLengthWithCorrectError(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
-	// 0. Ban chat cua cai test nay la:
-	// 0.1 Cai validation set max la 255
-	// 0.2 Nhung db chi set max la 100
-	// Test tinh huong nay thi pass validation
-	// Nhung DB nen bao loi
-	// 1. Chuan bi input dau vao cho ham CreateNote
-	largeStr := `The func keyword signifies that this is the start point of a function. Next comes the name of the function. Then there is a set of brackets declares the expected variables (a list of parameters) for this function. After that there is closing bracket comes with an optional list of return types. The opening brace signifies the start of the function body, which is wrapped up by the closing bracket between them we write the logic for the function.`
+	// 1. String len phai lon hon >1000 thi kiem tra error message phai dung mong doi.
+	largeStr := fakeString(2000)
 	data := `{"title": "` + largeStr + `","completed": false}`
 	note := model.Note{}
 	json.Unmarshal([]byte(data), &note)
@@ -142,34 +147,20 @@ func Test_NoteCreate_TitleInValid(t *testing.T) {
 	}
 }
 
-func Test_NoteCreate_TitleMaxLengtDB(t *testing.T) {
+func Test_NoteCreate_TitleMaxLengthCorrectDBError(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
-	// 0. Ban chat cua cai test nay la:
-	// 0.1 Cai validation set max la 255
-	// 0.2 Nhung db chi set max la 100
-	// Test tinh huong nay thi pass validation
-	// Nhung DB nen bao loi
-	// 1. Chuan bi input dau vao cho ham CreateNote
-	largeStr := `The func keyword signifies that this is the start point of a function.The func keyword signifies that this is the start point of a function.`
+	// 1. Tinh huong test pass validation (<1000)
+	// 2. nhung lon hon gia tri cho phep trong DB la 255
+	largeStr := fakeString(500)
 	data := `{"title": "` + largeStr + `","completed": false}`
-	note := model.Note{}
-	json.Unmarshal([]byte(data), &note)
 	ctx := buildMockContext(data)
 	noteRepo := new(mock.NoteRepoImpl)
-	// 2. Goi function can test
-	// 2.1 Design cai expectation = nil
-	// vi cai length > 100 quy dinh trong db
-	var expected *model.Note
-	// 2.2  Mock function
-	expectedErr := errors.New(`Error 1406: Data too long for column 'title' at row 1`)
-	noteRepo.On("Create", note).Return(expected, expectedErr)
-	// 2.4 Phat bieu quan trong
-	// Giai su cai ham trong DB tra ve ket qua dung
-	// Thi ham NoteCreate minh can test con tra ve ket qua dung khong?
+	// 2  Mock function
 	actual, err := NoteCreate(ctx, noteRepo)
 	// 3. Kiem tra ket qua la dung nhu mong doi
+	expectedErr := errors.New(`Error 1406: Data too long for column 'title' at row 1`)
 	if err.Error() != expectedErr.Error() {
-		t.Error("Expected error should be max tag")
+		t.Error("Expected error should be DB error")
 	}
 	if actual != nil {
 		t.Error("Actual should be nil")
