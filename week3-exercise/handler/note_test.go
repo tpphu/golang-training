@@ -2,63 +2,176 @@ package handler
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
 
-	m "../mock"
+	mock "../mock"
 	"../model"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
 
-// Khong nen bind o day vi no se bi loi EOF
-// vi khi vao ben trong goi lai ham bin
-// c.BindJSON(&note) // Khong nen goi
-
-func TestNoteCreateWithInValidValidator(t *testing.T) {
-	gin.SetMode(gin.ReleaseMode)
-	// 1. Gia lap context
+func buildMockContext(data string) *gin.Context {
 	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-	data := `{"title":"todo"}`
-	c.Request = httptest.NewRequest("POST", "/note", strings.NewReader(data))
-	c.Request.Header.Set("Content-Type", "application/json")
-	noteRepo := new(m.NoteRepoImpl)
-	_, err := NoteCreate(c, noteRepo)
+	ctx, _ := gin.CreateTestContext(w)
+	ctx.Request = httptest.NewRequest("POST", "/note", strings.NewReader(data))
+	ctx.Request.Header.Set("Content-Type", "application/json")
+	return ctx
+}
+func Test_NoteCreate_TitleIsEmpty(t *testing.T) {
+	gin.SetMode(gin.ReleaseMode)
+	// 1. Chuan bi input dau vao cho ham CreateNote
+	data := `{"title": "","completed": false}`
+	ctx := buildMockContext(data)
+	noteRepo := new(mock.NoteRepoImpl)
+	// 2. Goi function can test
+	_, err := NoteCreate(ctx, noteRepo)
+	// 3. Kiem tra ket qua la dung nhu mong doi
 	if err == nil {
-		t.Error("Error should not be nil because this will not valid min rule validator")
+		t.Error("Error should not be nil")
 	}
 }
 
-func TestNoteCreateWithValidValidator(t *testing.T) {
-	// 1. Gia lap context
+func Test_NoteCreate_TitleHasMinLength(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
-	w := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(w)
-	data := `{"title":"todo 123"}`
-	c.Request = httptest.NewRequest("POST", "/note", strings.NewReader(data))
-	c.Request.Header.Set("Content-Type", "application/json")
-	// 2. Logic nay boc lo code thiet ke khong dung
-	// 2.1 Do phai dung json.Unmarshal de thanh gia tri truyen vao ham On("Create")
-	noteRepo := new(m.NoteRepoImpl)
+	// 1. Chuan bi input dau vao cho ham CreateNote
+	data := `{"title": "abc","completed": false}`
+	ctx := buildMockContext(data)
+	noteRepo := new(mock.NoteRepoImpl)
+	// 2. Goi function can test
+	_, err := NoteCreate(ctx, noteRepo)
+	// 3. Kiem tra ket qua la dung nhu mong doi
+	if err == nil {
+		t.Error("Error should not be nil")
+	}
+}
+
+func Test_NoteCreate_TitleHasMaxLength(t *testing.T) {
+	gin.SetMode(gin.ReleaseMode)
+	// 1. Chuan bi input dau vao cho ham CreateNote
+	largeStr := "Ngoài các yếu tố về performance, simple, security, thì mình đánh giá một framework phải có một cộng đồng hỗ trợ mạnh với hệ sinh thái về plugin và giải pháp đa dạng."
+	data := `{"title": "` + largeStr + `","completed": false}`
+	ctx := buildMockContext(data)
+	noteRepo := new(mock.NoteRepoImpl)
+	// 2. Goi function can test
+	_, err := NoteCreate(ctx, noteRepo)
+	// 3. Kiem tra ket qua la dung nhu mong doi
+	if err == nil {
+		t.Error("Error should not be nil")
+	}
+}
+
+func Test_NoteCreate_TitleIsValid(t *testing.T) {
+	gin.SetMode(gin.ReleaseMode)
+	// 1. Chuan bi input dau vao cho ham CreateNote
+	data := `{"title": "Should do homework","completed": false}`
 	note := model.Note{}
 	json.Unmarshal([]byte(data), &note)
-	actual := model.Note{
-		Title: "todo 123",
+	ctx := buildMockContext(data)
+	noteRepo := new(mock.NoteRepoImpl)
+	// 2. Goi function can test
+	// 2.1 Design cai expectation
+	expected := model.Note{
+		Title:     "Should do homework",
+		Completed: false,
 		Model: gorm.Model{
-			ID:        123,
+			ID:        28,
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		},
 	}
-	noteRepo.On("Create", note).Return(actual, nil)
-	expected, err := NoteCreate(c, noteRepo)
+	// 2.2 Cach khai bao so 2, neu cach 1 qua phuc tap
+	// expected.ID = 28
+	// expected.Title = "Should do homework"
+	// expected.DeletedAt = nil
+	// expected.Completed = false
+	// expected.CreatedAt = time.Now()
+	// expected.UpdatedAt = time.Now()
+
+	// 2.3 Voi mock test minh phat bieu rang, voi ham Create truyen vao
+	// cai note thi tra ve cai expected
+	noteRepo.On("Create", note).Return(&expected, nil)
+	// 2.4 Phat bieu quan trong
+	// Giai su cai ham trong DB tra ve ket qua dung
+	// Thi ham NoteCreate minh can test con tra ve ket qua dung khong?
+	actual, err := NoteCreate(ctx, noteRepo)
+	// 3. Kiem tra ket qua la dung nhu mong doi
 	if err != nil {
-		t.Error("Error should be nil")
+		t.Error("Error should not be nil")
 	}
-	if expected.ID != 123 {
-		t.Error("note.ID should be 123")
+	if actual.ID != expected.ID {
+		t.Error("Actual note should be same expected note")
+	}
+}
+
+func Test_NoteCreate_TitleInValid(t *testing.T) {
+	gin.SetMode(gin.ReleaseMode)
+	// 0. Ban chat cua cai test nay la:
+	// 0.1 Cai validation set max la 255
+	// 0.2 Nhung db chi set max la 100
+	// Test tinh huong nay thi pass validation
+	// Nhung DB nen bao loi
+	// 1. Chuan bi input dau vao cho ham CreateNote
+	largeStr := `The func keyword signifies that this is the start point of a function. Next comes the name of the function. Then there is a set of brackets declares the expected variables (a list of parameters) for this function. After that there is closing bracket comes with an optional list of return types. The opening brace signifies the start of the function body, which is wrapped up by the closing bracket between them we write the logic for the function.`
+	data := `{"title": "` + largeStr + `","completed": false}`
+	note := model.Note{}
+	json.Unmarshal([]byte(data), &note)
+	ctx := buildMockContext(data)
+	noteRepo := new(mock.NoteRepoImpl)
+	// 2. Goi function can test
+	// 2.1 Design cai expectation = nil
+	// vi cai length > 100 quy dinh trong db
+	var expected *model.Note
+	// 2.2  Mock function
+	expectedErr := errors.New(`Key: 'Note.Title' Error:Field validation for 'Title' failed on the 'max' tag`)
+	noteRepo.On("Create", note).Return(expected, expectedErr)
+	// 2.4 Phat bieu quan trong
+	// Giai su cai ham trong DB tra ve ket qua dung
+	// Thi ham NoteCreate minh can test con tra ve ket qua dung khong?
+	actual, err := NoteCreate(ctx, noteRepo)
+	// 3. Kiem tra ket qua la dung nhu mong doi
+	if err.Error() != expectedErr.Error() {
+		t.Error("Expected error should be max tag")
+	}
+	if actual != nil {
+		t.Error("Actual should be nil")
+	}
+}
+
+func Test_NoteCreate_TitleMaxLengtDB(t *testing.T) {
+	gin.SetMode(gin.ReleaseMode)
+	// 0. Ban chat cua cai test nay la:
+	// 0.1 Cai validation set max la 255
+	// 0.2 Nhung db chi set max la 100
+	// Test tinh huong nay thi pass validation
+	// Nhung DB nen bao loi
+	// 1. Chuan bi input dau vao cho ham CreateNote
+	largeStr := `The func keyword signifies that this is the start point of a function.The func keyword signifies that this is the start point of a function.`
+	data := `{"title": "` + largeStr + `","completed": false}`
+	note := model.Note{}
+	json.Unmarshal([]byte(data), &note)
+	ctx := buildMockContext(data)
+	noteRepo := new(mock.NoteRepoImpl)
+	// 2. Goi function can test
+	// 2.1 Design cai expectation = nil
+	// vi cai length > 100 quy dinh trong db
+	var expected *model.Note
+	// 2.2  Mock function
+	expectedErr := errors.New(`Error 1406: Data too long for column 'title' at row 1`)
+	noteRepo.On("Create", note).Return(expected, expectedErr)
+	// 2.4 Phat bieu quan trong
+	// Giai su cai ham trong DB tra ve ket qua dung
+	// Thi ham NoteCreate minh can test con tra ve ket qua dung khong?
+	actual, err := NoteCreate(ctx, noteRepo)
+	// 3. Kiem tra ket qua la dung nhu mong doi
+	if err.Error() != expectedErr.Error() {
+		t.Error("Expected error should be max tag")
+	}
+	if actual != nil {
+		t.Error("Actual should be nil")
 	}
 }

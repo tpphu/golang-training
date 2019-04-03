@@ -12,11 +12,7 @@ type NoteRepoImpl struct {
 
 func (self *NoteRepoImpl) Create(note model.Note) (*model.Note, error) {
 	args := self.Called(note)
-	if args.Get(0) == nil {
-		return nil, args.Error(1)
-	}
-	r := args.Get(0).(model.Note)
-	return &r, args.Error(1)
+	return args.Get(0).(*model.Note), args.Error(1)
 }
 
 func (self *NoteRepoImpl) Find(id int) (*model.Note, error) {

@@ -21,5 +21,5 @@ func pingHandler(c *gin.Context) {
 	} else {
 		message = message + " 1st server!"
 	}
-	c.String(201, message)
+	c.String(200, message)
 }

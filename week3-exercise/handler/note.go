@@ -18,6 +18,15 @@ func NoteCreate(c *gin.Context, noteRepo repo.NoteRepo) (*model.Note, error) {
 		return nil, err
 	}
 	// Dung repo de minh create dc note
+	// Minh muon gia lap cai function nay
+	// Do la ly do co khai niem mock test
+
+	// Thu gia su sua lai code de chuong trinh chay sai
+	// noteResult, err := noteRepo.Create(note)
+	// result := *noteResult
+	// result.ID = 123
+	// return &result, err
+
 	return noteRepo.Create(note)
 }
 
