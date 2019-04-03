@@ -8,10 +8,10 @@ import (
 
 type Watcher struct {
 	//load info
-	DBLoadUrlReq    int
+	DBLoadUrlReq    int // 1. Con số này đại diện cho số lần call vào DB
 	DBLoadUrlRes    int
 	DBLoadUrlErr    int
-	DBLoadUrlTotal  int
+	DBLoadUrlTotal  int // 2. Con số này đại diện cho số lượng row đã lấy ra
 	DBLoadUrlLastId uint
 	//download info
 	NumHTTPReq int
