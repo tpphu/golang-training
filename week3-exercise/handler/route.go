@@ -10,6 +10,28 @@ import (
 
 func InitRoutes(engine *gin.Engine, db *gorm.DB) {
 	engine.GET("/ping", pingHandler)
+	initNoteRoutes(engine, db)
+	initUserRoutes(engine, db)
+}
+
+func initUserRoutes(engine *gin.Engine, db *gorm.DB) {
+	engine.POST("/signin", func(c *gin.Context) {
+		userRepository := &repo.UserRepoImpl{
+			DB: db,
+		}
+		result, err := UserSignin(c, userRepository)
+		simpleReturnHandler(c, err, result)
+	})
+	engine.POST("/login", func(c *gin.Context) {
+		userRepository := &repo.UserRepoImpl{
+			DB: db,
+		}
+		result, err := UserLogin(c, userRepository)
+		simpleReturnHandler(c, err, result)
+	})
+}
+
+func initNoteRoutes(engine *gin.Engine, db *gorm.DB) {
 	groupRouter := engine.Group("/note")
 
 	// 1. Authentication // Identity

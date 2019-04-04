@@ -29,7 +29,8 @@ func main() {
 		panic(err)
 	}
 	defer db.Close()
-	db.AutoMigrate(&model.Note{})
+	db.LogMode(true)
+	db.AutoMigrate(&model.Note{}, &model.User{})
 
 	// 2. Write access log ra file & de giu lai cai Println -> Stdout
 	fileWriter, err := os.Create("access.log")
