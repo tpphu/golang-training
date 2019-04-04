@@ -2,6 +2,7 @@ package handler
 
 import (
 	"strconv"
+	"time"
 
 	"../model"
 	"../repo"
@@ -46,7 +47,7 @@ func UserLogin(c *gin.Context, repo repo.UserRepo) (*model.UserLoginReponse, err
 	password := []byte(form.Password)
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), password)
 	claims := &jwt.StandardClaims{
-		ExpiresAt: 3600 * 24 * 365 * 1000,
+		ExpiresAt: time.Now().Add(time.Hour * 24 * 365).Unix(),
 		Issuer:    "NordicCoder",
 		Id:        strconv.Itoa(int(user.ID)),
 	}
