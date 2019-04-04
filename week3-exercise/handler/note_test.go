@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"encoding/json"
 	"errors"
 	"math/rand"
@@ -152,15 +151,17 @@ func Test_NoteCreate_TitleMaxLengthWithCorrectError(t *testing.T) {
 
 func Test_NoteUpdate_TitleMaxLengthIsHitLimit(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
-	// 1. "[Editted] " len=10 + 245 = 255 still ok
+	// 1.1 "[Editted] " len=10 + 245 = 255 still ok
 	title := fakeString(245)
 	id := 1
 	data := `{"title": "` + title + `","completed": false}`
-	note := model.Note{}
-	json.Unmarshal([]byte(data), &note)
 	ctx := buildMockContext("PUT", "/note/"+strconv.Itoa(id), data)
 	ctx.Params = append(ctx.Params,gin.Param{"id", strconv.Itoa(id)})
+	// 1.2 Mock db
 	noteRepo := new(mock.NoteRepoImpl)
+	note := model.Note{}	
+	json.Unmarshal([]byte(data), &note)
+	note.Title = "[Editted] " + note.Title
 	noteRepo.On("Update", id, note).Return(nil)
 	// 2  Mock function
 	err := NoteUpdate(ctx, noteRepo)
