@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"encoding/json"
 	"errors"
 	"math/rand"
@@ -8,6 +9,7 @@ import (
 	"strings"
 	"testing"
 	"time"
+	"strconv"
 
 	mock "../mock"
 	"../model"
@@ -25,10 +27,10 @@ func fakeString(n int) string {
 	return string(b)
 }
 
-func buildMockContext(data string) *gin.Context {
+func buildMockContext(method string, path string, data string) *gin.Context {
 	w := httptest.NewRecorder()
-	ctx, _ := gin.CreateTestContext(w)
-	ctx.Request = httptest.NewRequest("POST", "/note", strings.NewReader(data))
+	ctx, _ := gin.CreateTestContext(w)	
+	ctx.Request = httptest.NewRequest(method, path, strings.NewReader(data))
 	ctx.Request.Header.Set("Content-Type", "application/json")
 	return ctx
 }
@@ -36,7 +38,7 @@ func Test_NoteCreate_TitleIsEmpty(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
 	// 1. Chuan bi input dau vao cho ham CreateNote
 	data := `{"title": "","completed": false}`
-	ctx := buildMockContext(data)
+	ctx := buildMockContext("POST", "/note", data)
 	noteRepo := new(mock.NoteRepoImpl)
 	// 2. Goi function can test
 	_, err := NoteCreate(ctx, noteRepo)
@@ -50,7 +52,7 @@ func Test_NoteCreate_TitleHasMinLength(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
 	// 1. Chuan bi input dau vao cho ham CreateNote
 	data := `{"title": "abc","completed": false}`
-	ctx := buildMockContext(data)
+	ctx := buildMockContext("POST", "/note", data)
 	noteRepo := new(mock.NoteRepoImpl)
 	// 2. Goi function can test
 	_, err := NoteCreate(ctx, noteRepo)
@@ -63,9 +65,9 @@ func Test_NoteCreate_TitleHasMinLength(t *testing.T) {
 func Test_NoteCreate_TitleHasMaxLength(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
 	// 1. Chuan bi input dau vao cho ham CreateNote
-	largeStr := fakeString(2000)
-	data := `{"title": "` + largeStr + `","completed": false}`
-	ctx := buildMockContext(data)
+	title := fakeString(300)
+	data := `{"title": "` + title + `","completed": false}`
+	ctx := buildMockContext("POST", "/note", data)
 	noteRepo := new(mock.NoteRepoImpl)
 	// 2. Goi function can test
 	_, err := NoteCreate(ctx, noteRepo)
@@ -81,7 +83,7 @@ func Test_NoteCreate_TitleIsValid(t *testing.T) {
 	data := `{"title": "Should do homework","completed": false}`
 	note := model.Note{}
 	json.Unmarshal([]byte(data), &note)
-	ctx := buildMockContext(data)
+	ctx := buildMockContext("POST", "/note", data)
 	noteRepo := new(mock.NoteRepoImpl)
 	// 2. Goi function can test
 	// 2.1 Design cai expectation
@@ -120,12 +122,12 @@ func Test_NoteCreate_TitleIsValid(t *testing.T) {
 
 func Test_NoteCreate_TitleMaxLengthWithCorrectError(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
-	// 1. String len phai lon hon >1000 thi kiem tra error message phai dung mong doi.
-	largeStr := fakeString(2000)
-	data := `{"title": "` + largeStr + `","completed": false}`
+	// 1. String len phai lon hon >255 thi kiem tra error message phai dung mong doi.
+	title := fakeString(300)
+	data := `{"title": "` + title + `","completed": false}`
 	note := model.Note{}
 	json.Unmarshal([]byte(data), &note)
-	ctx := buildMockContext(data)
+	ctx := buildMockContext("POST", "/note", data)
 	noteRepo := new(mock.NoteRepoImpl)
 	// 2. Goi function can test
 	// 2.1 Design cai expectation = nil
@@ -147,22 +149,44 @@ func Test_NoteCreate_TitleMaxLengthWithCorrectError(t *testing.T) {
 	}
 }
 
-func Test_NoteCreate_TitleMaxLengthCorrectDBError(t *testing.T) {
+
+func Test_NoteUpdate_TitleMaxLengthIsHitLimit(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
-	// 1. Tinh huong test pass validation (<1000)
-	// 2. nhung lon hon gia tri cho phep trong DB la 255
-	largeStr := fakeString(500)
-	data := `{"title": "` + largeStr + `","completed": false}`
-	ctx := buildMockContext(data)
+	// 1. "[Editted] " len=10 + 245 = 255 still ok
+	title := fakeString(245)
+	id := 1
+	data := `{"title": "` + title + `","completed": false}`
+	note := model.Note{}
+	json.Unmarshal([]byte(data), &note)
+	ctx := buildMockContext("PUT", "/note/"+strconv.Itoa(id), data)
+	ctx.Params = append(ctx.Params,gin.Param{"id", strconv.Itoa(id)})
+	noteRepo := new(mock.NoteRepoImpl)
+	noteRepo.On("Update", id, note).Return(nil)
+	// 2  Mock function
+	err := NoteUpdate(ctx, noteRepo)
+	// 3. Kiem tra ket qua la dung nhu mong doi	
+	if err != nil {
+		t.Error("This should not be error")
+	}
+}
+
+// 1. Doi voi test case nay khong nen test voi case NoteCreate
+// 2. Su dung tinh huong cua NoteUpdate de test giup cac ban de hieu hon
+func Test_NoteUpdate_TitleMaxLengthCorrectDBError(t *testing.T) {
+	gin.SetMode(gin.ReleaseMode)
+	// 1. Tinh huong test pass validation (<255)
+	// 2. Nhung sau do cai ham xu ly lam cho cai Title > 255
+	title := fakeString(255)
+	id:= 1
+	data := `{"title": "` + title + `","completed": false}`
+	ctx := buildMockContext("PUT", "/note/"+strconv.Itoa(id), data)
+	ctx.Params = append(ctx.Params,gin.Param{"id", strconv.Itoa(id)})
 	noteRepo := new(mock.NoteRepoImpl)
 	// 2  Mock function
-	actual, err := NoteCreate(ctx, noteRepo)
+	err := NoteUpdate(ctx, noteRepo)
 	// 3. Kiem tra ket qua la dung nhu mong doi
 	expectedErr := errors.New(`Error 1406: Data too long for column 'title' at row 1`)
-	if err.Error() != expectedErr.Error() {
+	if err == nil || err.Error() != expectedErr.Error() {
 		t.Error("Expected error should be DB error")
-	}
-	if actual != nil {
-		t.Error("Actual should be nil")
 	}
 }

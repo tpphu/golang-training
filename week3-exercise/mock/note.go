@@ -31,6 +31,9 @@ func (self *NoteRepoImpl) List(pagination helper.Pagination) ([]model.Note, erro
 }
 
 func (self *NoteRepoImpl) Update(id int, note model.Note) error {
+	if len(note.Title) > 255 {
+		return errors.New(`Error 1406: Data too long for column 'title' at row 1`)
+	}
 	args := self.Called(id, note)
 	return args.Error(0)
 }

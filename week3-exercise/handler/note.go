@@ -45,7 +45,10 @@ func NoteList(c *gin.Context, notePepo repo.NoteRepo) ([]model.Note, error) {
 func NoteUpdate(c *gin.Context, notePepo repo.NoteRepo) error {
 	id, _ := strconv.Atoi(c.Param("id"))
 	note := model.Note{}
-	c.ShouldBind(&note)
+	if err := c.ShouldBind(&note); err != nil {
+		return err
+	}
+	note.Title = "[Editted] " + note.Title
 	return notePepo.Update(id, note)
 }
 
