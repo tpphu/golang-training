@@ -31,4 +31,5 @@ type UserSigninResponse struct {
 type UserLoginReponse struct {
 	ID       uint
 	Fullname string
+	Token    string
 }

@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"strconv"
+
 	"../model"
 	"../repo"
-	"golang.org/x/crypto/bcrypt"
-
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Khai bao la mot interface
@@ -43,9 +45,18 @@ func UserLogin(c *gin.Context, repo repo.UserRepo) (*model.UserLoginReponse, err
 	}
 	password := []byte(form.Password)
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), password)
+	claims := &jwt.StandardClaims{
+		ExpiresAt: 3600 * 24 * 365 * 1000,
+		Issuer:    "NordicCoder",
+		Id:        strconv.Itoa(int(user.ID)),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, _ := token.SignedString(jwtSecretKey)
 	userLoginResponse := &model.UserLoginReponse{
 		ID:       user.ID,
 		Fullname: user.Fullname,
+		Token:    tokenString,
 	}
+	c.SetCookie("Token", tokenString, 3600*24*365, "/", "", false, true)
 	return userLoginResponse, err
 }

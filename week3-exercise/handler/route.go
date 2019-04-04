@@ -4,9 +4,13 @@ import (
 	"fmt"
 
 	"../repo"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
+
+var jwtSecretKey []byte = []byte("ThisIsAVerySecretKey")
+var identityKey = "identity"
 
 func InitRoutes(engine *gin.Engine, db *gorm.DB) {
 	engine.GET("/ping", pingHandler)
@@ -38,7 +42,7 @@ func initNoteRoutes(engine *gin.Engine, db *gorm.DB) {
 	// 2. Lam logger/tracking
 	// 3. Recovery
 	// 4. Add nhieu cai middleware va no chay tuan tu
-	groupRouter.Use(simpleMiddleware)
+	groupRouter.Use(authenMiddleware)
 	{
 		groupRouter.GET("/:id", func(c *gin.Context) {
 			noteRepository := &repo.NoteRepoImpl{
@@ -94,4 +98,32 @@ func simpleMiddleware(c *gin.Context) {
 	// }
 	fmt.Println("Print here for every request")
 	c.Next()
+}
+
+func authenMiddleware(c *gin.Context) {
+
+	tokenString := c.GetHeader("Authentication")
+	token, err := jwt.ParseWithClaims(tokenString, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+		return jwtSecretKey, nil
+	})
+
+	if err != nil {
+		c.AbortWithStatus(401)
+		return
+	}
+
+	claims, ok := token.Claims.(*jwt.StandardClaims)
+	fmt.Println("jwt-claims:", claims)
+	if ok && claims.Valid() == nil {
+		c.Set(identityKey, claims.Id)
+		c.Next()
+		return
+	}
+	c.AbortWithStatus(401)
 }
