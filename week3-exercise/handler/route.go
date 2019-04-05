@@ -14,6 +14,13 @@ var identityKey = "identity"
 
 func InitRoutes(engine *gin.Engine, db *gorm.DB) {
 	engine.GET("/ping", pingHandler)
+	engine.GET("/get-increment-id", func(c *gin.Context) {
+		settingRepository := &repo.SettingRepoImpl{
+			DB: db,
+		}
+		result, err := GetIncrementId(c, settingRepository)
+		simpleReturnHandler(c, err, result)
+	})
 	initNoteRoutes(engine, db)
 	initUserRoutes(engine, db)
 }
