@@ -18,7 +18,7 @@ const (
 )
 
 type noteService struct {
-	db *gorm.DB
+	DB *gorm.DB
 }
 
 func (self *noteService) Create(ctx context.Context, req *pb.NoteReq) (*pb.Note, error) {
@@ -30,13 +30,31 @@ func (self *noteService) Create(ctx context.Context, req *pb.NoteReq) (*pb.Note,
 
 func (self *noteService) Find(ctx context.Context, req *pb.NoteFindReq) (*pb.Note, error) {
 	m := &model.Note{}
-	self.db.Find(m, "id = ?", req.Id)
+	self.DB.Find(m, "id = ?", req.Id)
 	note := &pb.Note{
 		Id:    int32(m.ID),
 		Title: m.Title,
 		CreatedAt: &google_protobuf.Timestamp{
 			Seconds: m.CreatedAt.Unix(),
 		},
+	}
+	return note, nil
+}
+
+func (self *noteService) Update(ctx context.Context, req *pb.NoteUpdateReq) (*pb.Note, error) {
+	m := model.Note{}
+	err := self.DB.Where("id =?", req.Id).First(&m).Error
+	if err != nil {
+		return nil, err
+	}
+	m.Title = req.Title
+	m.Completed = req.Completed
+	self.DB.Save(&m)
+
+	note := &pb.Note{
+		Id:        int32(m.ID),
+		Title:     m.Title,
+		Completed: m.Completed,
 	}
 	return note, nil
 }
@@ -49,7 +67,7 @@ func main() {
 	// 3. Map service to server
 	db, _ := gorm.Open("mysql", "default:secret@/notes?charset=utf8&parseTime=True&loc=Local")
 	service := &noteService{
-		db: db,
+		DB: db,
 	}
 	pb.RegisterNoteServiceServer(grpcServer, service)
 	// 4. Binding port

@@ -25,6 +25,7 @@ func UserSignin(c *gin.Context, repo repo.UserRepo) (*model.UserSigninResponse, 
 	if err != nil {
 		return nil, err
 	}
+	// return createdUser, nil
 	userSigninResponse := &model.UserSigninResponse{
 		ID:       createdUser.ID,
 		Username: createdUser.Username,
@@ -44,8 +45,15 @@ func UserLogin(c *gin.Context, repo repo.UserRepo) (*model.UserLoginReponse, err
 	if err != nil {
 		return nil, err
 	}
+	// JWT
 	password := []byte(form.Password)
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), password)
+	if err != nil {
+		return nil, err
+	}
+	// Co 2 y phuc tap ve cai JWT
+	// 1. Expire trong bao lau
+	// 2. Neu expire ngan thi co che de client refresh lai new token la gi
 	claims := &jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(time.Hour * 24 * 365).Unix(),
 		Issuer:    "NordicCoder",

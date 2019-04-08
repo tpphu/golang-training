@@ -18,10 +18,22 @@ func main() {
 	// 2. New client
 	client := pb.NewNoteServiceClient(conn)
 	// 3. Call Create
-	req := pb.NoteFindReq{
-		Id: 13,
+	// req := pb.NoteFindReq{
+	// 	Id: 8,
+	// }
+	// res, _ := client.Find(context.TODO(), &req)
+	// // 4. In ket qua
+	// fmt.Println("Response:", res)
+
+	NoteUpdate(client)
+}
+
+func NoteUpdate(client pb.NoteServiceClient) {
+	req := pb.NoteUpdateReq{
+		Id:        8,
+		Title:     "[Updated] Todo 8",
+		Completed: true,
 	}
-	res, _ := client.Find(context.TODO(), &req)
-	// 4. In ket qua
-	fmt.Println("Response:", res)
+	note, _ := client.Update(context.TODO(), &req)
+	fmt.Println("Response:", note)
 }

@@ -6,11 +6,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type UserLoginForm struct {
-	Login    string `binding:"required"`
-	Password string `binding:"required"`
-}
-
 type User struct {
 	gorm.Model
 	Username string `gorm:"unique;not null",binding:"required"`
@@ -18,6 +13,11 @@ type User struct {
 	Password string `binding:"required"`
 	Fullname string
 	Bod      *time.Time
+}
+
+type UserLoginForm struct {
+	Login    string `binding:"required"`
+	Password string `binding:"required"`
 }
 
 type UserSigninResponse struct {

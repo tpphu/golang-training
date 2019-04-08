@@ -8,12 +8,13 @@ import "google/protobuf/timestamp.proto";
 service NoteService {
   rpc Create(NoteReq) returns (Note) {}
   rpc Find(NoteFindReq) returns (Note) {}
+  rpc Update(NoteUpdateReq) returns (Note) {}
 }
 
 message Note {
   int32 id = 1;
   string title = 2;
-  string completed = 3;
+  bool completed = 3;
   google.protobuf.Timestamp created_at = 4;
   google.protobuf.Timestamp updated_at = 5;
 }
@@ -25,4 +26,10 @@ message NoteReq {
 
 message NoteFindReq {
   int32 id = 1;
+}
+
+message NoteUpdateReq {
+  int32 id = 1;
+  string title = 2;
+  bool completed = 3;
 }

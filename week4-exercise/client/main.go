@@ -19,7 +19,8 @@ func main() {
 	client := pb.NewNoteServiceClient(conn)
 	// 3. Call Create
 	req := pb.NoteReq{
-		Title: "Todo 123",
+		Title:     "Todo 123",
+		Completed: true,
 	}
 	res, _ := client.Create(context.TODO(), &req)
 	// 4. In ket qua

@@ -13,6 +13,7 @@ const (
 	port = ":50051"
 )
 
+// Viet cai note service de implement cai service da define
 type noteService struct{}
 
 func (self *noteService) Create(ctx context.Context, req *pb.NoteReq) (*pb.Note, error) {
