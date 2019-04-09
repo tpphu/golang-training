@@ -4,6 +4,7 @@ import { check } from "k6";
 var allUniqueIds = {};
 export default function() {  
   let res = http.get("http://host.docker.internal:8081/get-increment-id");
+  // let res = http.get("http://api.dev.local/get-increment-id");
   check(res, {
     "status was 200": (r) => r.status == 200,
     "transaction time OK": (r) => r.timings.duration < 50,
