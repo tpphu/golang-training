@@ -16,6 +16,8 @@ This is an example of creating a micro service.
 docker-compose up -d
 ```
 
+Visit to see: http://localhost:8500
+
 - Run the service
 
 ```shell
