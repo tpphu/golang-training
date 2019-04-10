@@ -7,9 +7,15 @@ import "google/api/annotations.proto";
 
 service NoteService {
   rpc Create(NoteReq) returns (Note) {}
-  rpc Find(NoteFindReq) returns (Note) {
+  rpc Find(NoteFindReq) returns (Note) {}
+  // rpc Find(NoteFindReq) returns (Note) {
+  //   option (google.api.http) = {
+  //     get: "/v1/note/{id}"
+  //   };
+  // }
+  rpc Delete(NoteDelReq) returns (NoteDelRes) {
     option (google.api.http) = {
-      get: "/v1/note/{id}"
+      delete: "/note/{id}" 
     };
   }
 }
@@ -29,4 +35,13 @@ message NoteReq {
 
 message NoteFindReq {
   int32 id = 1;
+}
+
+message NoteDelReq{
+  int32 id = 5;
+}
+
+message NoteDelRes{
+  bool success = 1;
+  string error_message = 2;
 }

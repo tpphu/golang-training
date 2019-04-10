@@ -13,6 +13,26 @@ const (
 )
 
 func main() {
+	testDelete()
+}
+
+func testDelete() {
+	// 1. Connect den server
+	conn, _ := grpc.Dial(address, grpc.WithInsecure())
+	client := pb.NewNoteServiceClient(conn)
+	req := pb.NoteDelReq{
+		Id: 124,
+	}
+	res, _ := client.Delete(context.TODO(), &req)
+
+	if res.Success == false {
+		fmt.Println("Can not delete")
+	} else {
+		fmt.Println("Can delete")
+	}
+
+}
+func testCreate() {
 	// 1. Connect to server at TCP port
 	conn, _ := grpc.Dial(address, grpc.WithInsecure())
 	// 2. New client

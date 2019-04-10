@@ -8,8 +8,8 @@ import (
 )
 
 type IncreKeeper struct {
-	MaxValue    uint32
-	SeekerValue uint32
+	MaxValue    uint32 //Pool ve mat so ma minh dang co, gia toi da ma minh lay ra tu DB
+	SeekerValue uint32 //Offset cua cai pool do, gia tri hien tai
 }
 
 func (self *IncreKeeper) FillValue(maxValue uint32, increStep uint32) {

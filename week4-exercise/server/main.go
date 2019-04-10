@@ -30,6 +30,18 @@ func (self *noteService) Find(ctx context.Context, req *pb.NoteFindReq) (*pb.Not
 	}, nil
 }
 
+func (self *noteService) Delete(ctx context.Context, req *pb.NoteDelReq) (*pb.NoteDelRes, error) {
+	if req.Id == 123 {
+		return &pb.NoteDelRes{
+			Success: true,
+		}, nil
+	}
+	return &pb.NoteDelRes{
+		Success:      false,
+		ErrorMessage: "Not Found",
+	}, nil
+}
+
 func main() {
 	// 1. Listen/Open a TPC connect at port
 	lis, _ := net.Listen("tcp", port)

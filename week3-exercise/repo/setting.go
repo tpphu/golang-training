@@ -15,6 +15,8 @@ type SettingRepoImpl struct {
 // Version 1
 func (self *SettingRepoImpl) GetNextId_V1(increStep uint32) (uint32, error) {
 	var valueInt uint32
+	// Cho nay cung dung Lock Row nhung ma vi khong co transaction
+	// Nen no khong co work
 	self.DB.Raw("SELECT value_int FROM settings WHERE `key`=? LIMIT 1 FOR UPDATE", "increment_id").
 		Row().
 		Scan(&valueInt)
@@ -25,6 +27,8 @@ func (self *SettingRepoImpl) GetNextId_V1(increStep uint32) (uint32, error) {
 	return valueInt, nil
 }
 
+// Hien tai la current: 0, next_value: 100
+// Hien tai la current: 100, next value: 200
 // Version 2
 // Voi lock row
 func (self *SettingRepoImpl) GetNextId(increStep uint32) (uint32, error) {

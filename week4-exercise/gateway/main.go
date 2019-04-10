@@ -12,8 +12,9 @@ import (
 	gw "../proto"
 )
 
+// Khai bao den grpc server
 var (
-	echoEndpoint = flag.String("echo_endpoint", "localhost:50051", "endpoint of YourService")
+	grpcEndpoint = "localhost:50051"
 )
 
 func run() error {
@@ -23,7 +24,7 @@ func run() error {
 
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err := gw.RegisterNoteServiceHandlerFromEndpoint(ctx, mux, *echoEndpoint, opts)
+	err := gw.RegisterNoteServiceHandlerFromEndpoint(ctx, mux, grpcEndpoint, opts)
 	if err != nil {
 		return err
 	}
