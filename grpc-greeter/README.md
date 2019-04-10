@@ -24,6 +24,8 @@ Visit to see: http://localhost:8500
 go run service.go --registry=consul
 ```
 
+> You can start many service as you want, and consul now will be load balancer
+
 - Run the client
 
 ```shell
