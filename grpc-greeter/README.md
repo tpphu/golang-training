@@ -10,16 +10,22 @@ This is an example of creating a micro service.
 
 ## Run the example
 
-Run the service
+- Run Consul docker
 
 ```shell
-go run main.go
+docker-compose up -d
 ```
 
-Run the client
+- Run the service
 
 ```shell
-go run client.go -name=Dau
+go run service.go --registry=consul
+```
+
+- Run the client
+
+```shell
+go run client.go --registry=consul
 ```
 
 And that's all there is to it.

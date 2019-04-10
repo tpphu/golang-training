@@ -21,6 +21,7 @@ func main() {
 	service := micro.NewService(
 		micro.Name("greeter"),
 	)
+	service.Init()
 
 	// 2. Register handler
 	proto.RegisterGreeterHandler(service.Server(), new(Greeter))
