@@ -13,7 +13,7 @@ const (
 )
 
 func main() {
-	testDelete()
+	testCreate()
 }
 
 func testDelete() {
