@@ -23,7 +23,8 @@ service NoteService {
 message Note {
   int32 id = 1;
   string title = 2;
-  string completed = 3;
+  bool completed = 3;
+  // bool complete = 3; // Only change the name
   google.protobuf.Timestamp created_at = 4;
   google.protobuf.Timestamp updated_at = 5;
 }

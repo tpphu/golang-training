@@ -18,8 +18,9 @@ type noteService struct{}
 
 func (self *noteService) Create(ctx context.Context, req *pb.NoteReq) (*pb.Note, error) {
 	return &pb.Note{
-		Id:    123,
-		Title: "Todo 123",
+		Id:        123,
+		Title:     req.Title,
+		Completed: req.Completed,
 	}, nil
 }
 
