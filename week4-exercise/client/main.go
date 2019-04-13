@@ -16,6 +16,23 @@ func main() {
 	testCreate()
 }
 
+func testCreate() {
+	// 1. Connect to server at TCP port
+	conn, _ := grpc.Dial(address, grpc.WithInsecure())
+	// 2. New client
+	client := pb.NewNoteServiceClient(conn)
+	// 3. Call Create
+	req := pb.NoteReq{
+		Title:     "Todo 123",
+		Completed: true,
+	}
+	res, _ := client.Create(context.TODO(), &req)
+	// 4. In ket qua
+
+	fmt.Println("Response:", res)
+	fmt.Println("Response.Completed:", res.Completed)
+}
+
 func testDelete() {
 	// 1. Connect den server
 	conn, _ := grpc.Dial(address, grpc.WithInsecure())
@@ -30,19 +47,4 @@ func testDelete() {
 	} else {
 		fmt.Println("Can delete")
 	}
-
-}
-func testCreate() {
-	// 1. Connect to server at TCP port
-	conn, _ := grpc.Dial(address, grpc.WithInsecure())
-	// 2. New client
-	client := pb.NewNoteServiceClient(conn)
-	// 3. Call Create
-	req := pb.NoteReq{
-		Title:     "Todo 123",
-		Completed: true,
-	}
-	res, _ := client.Create(context.TODO(), &req)
-	// 4. In ket qua
-	fmt.Println("Response:", res)
 }

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package note;
+
+import "google/protobuf/timestamp.proto";
+
+
+service NoteService {
+  rpc Create(NoteCreateReq) returns (Note) {}
+}
+
+message Note {
+  uint32 id = 1;
+  string title = 2;
+  bool completed = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message NoteCreateReq {
+  string title = 1;
+  bool completed = 2;
+}
+

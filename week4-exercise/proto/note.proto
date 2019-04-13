@@ -24,11 +24,11 @@ message Note {
   int32 id = 1;
   string title = 2;
   bool completed = 3; // Default
-  string description = 6;
   // bool complete = 3; // Only change the name
   // int32 completed = 3; // Change data type 
   google.protobuf.Timestamp created_at = 4;
   google.protobuf.Timestamp updated_at = 5;
+  string description = 6;
 }
 
 message NoteReq {

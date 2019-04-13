@@ -21,8 +21,9 @@ func (g *Greeter) Hello(ctx context.Context, req *proto.HelloRequest, rsp *proto
 func main() {
 	// 1. Create service
 	service := micro.NewService(
-		micro.Name("greeter"),
+		micro.Name("greeter"), // Quan trong la co mot cai ten
 	)
+	// 1.1 Registry to Consul
 	service.Init()
 
 	// 2. Register handler
