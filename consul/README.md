@@ -1,6 +1,6 @@
 # Start Consul
 
-docker-compose up
+docker-compose up -d
 
 # Start UI
 
