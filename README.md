@@ -1,6 +1,6 @@
 # Golang for Backend Developer
 
-> For more detail, please visit [wiki](/[wiki](https://github.com/tpphu/golang-trainning/wiki))
+> For more detail, please visit [wiki](/[wiki](https://github.com/tpphu/golang-training/wiki))
 
 ## About the instructor
 
