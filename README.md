@@ -7,9 +7,9 @@
 **Phu, Tran Phong**
 Developer and Instructor
 
-I'm Phu, I'm a developer with a passion for teaching. I'm instructor at Nordic Coder, teaching many courses about backend and frontend such as Golang/Nodejs/PHP, ES/MySQL and Reactjs/Angular. I've helped students learn to code, improve their skills. I've been invited/collaberated by companies such as ABC, Grab VN to build the courses for training their employees.
+I'm Phu, I'm a developer with a passion for teaching. I'm instructor at Nordic Coder, teaching many courses about backend and frontend such as Golang/Nodejs/PHP, ES/MySQL and Reactjs/Angular. I've helped students learn to code, improve their skills. I've been invited/collaborated by companies such as ABC, Grab VN to build the courses for training their employees.
 
-I spend most of my time to researching latest methodlogies, technologies, skills which should be have for developers to help them learn to lean code, code for fun and love, and make hard concepts easy to understand.
+I spend most of my time to researching latest methodologies, technologies, skills which should be have for developers to help them learn to lean code, code for fun and love, and make hard concepts easy to understand.
 
 Welcome to my course, I am on way to help you.
 
