@@ -4,7 +4,7 @@ import "fmt"
 import "unicode/utf8"
 
 func main() {
-	showDebug5()
+	showDebug2()
 }
 
 func showDebug1() {
@@ -26,11 +26,11 @@ func showDebug1() {
 
 func showDebug2() {
 	var s string
-	s = "Xin chào"
+	s = "Xin chầo"
 	fmt.Println("Length of string: ", len(s))
 	fmt.Println(s)
 
-	bytes := []byte(s)
+	bytes := []byte(s) //UTF8 encoding
 	fmt.Println("Length of bytes: ", len(bytes))
 	for i := 0; i < len(bytes); i++ {
 		fmt.Printf("%v ", bytes[i])
@@ -43,7 +43,7 @@ func showDebug2() {
 
 func showDebug3() {
 	var s string
-	s = "Xin chào"
+	s = "Xin chầo"
 	fmt.Println("Length of string: ", len(s))
 	fmt.Println(s)
 
