@@ -4,7 +4,7 @@ import "fmt"
 import "unicode/utf8"
 
 func main() {
-	showDebug2()
+	showDebug5()
 }
 
 func showDebug1() {
@@ -43,7 +43,7 @@ func showDebug2() {
 
 func showDebug3() {
 	var s string
-	s = "Xin chầo"
+	s = "Xin chào"
 	fmt.Println("Length of string: ", len(s))
 	fmt.Println(s)
 
