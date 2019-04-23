@@ -4,7 +4,7 @@
 
 ## About the instructor
 
-**Phu, Tran Phong**
+**[Phu, Tran Phong](https://www.linkedin.com/in/tpphu/)**
 Developer and Instructor
 
 I'm Phu, I'm a developer with a passion for teaching. I'm instructor at Nordic Coder, teaching many courses about backend and frontend such as Golang/Nodejs/PHP, ES/MySQL and Reactjs/Angular. I've helped students learn to code, improve their skills. I've been invited/collaborated by companies such as ABC, Grab VN to build the courses for training their employees.
@@ -26,30 +26,32 @@ After finishing this course, students will be able to learn how to:
 
 ### Course syllabus
 
-#### Week 1
+#### Topic 1
 
 - An Introduction to Programming with Go and TDD
 - Overview on the fastest growing language and why we should learn Golang
 - Set up environments & code organization
 - Go characteristics and principles
 - Reflection and Go's reflect package
-- Exercise: Cloning Lodash to deep dive into Go
-- Exercise: Practising TDD methodology
+- Exercise: converting CSV to YAML using pointer
+- Exercise: cloning Lodash to deep dive into Go
+- Exercise: practising TDD methodology
 
 
-#### Week 2
+#### Topic 2
 
 - Diving into Golang by designing a scripting/job 
 - Discover goroutines, channel, defer, panic, recover
 - Error handling in Go
 - Pipeline programming in Go
 - How Go runs in single CPU and multiple CPUs
+- Working with database/mysql
 - Strategy to watch scripting/job
-- Exercise: build a crawler
-- Exercise: follow TDD and HTPP mock test
+- Exercise: building a crawler
+- Exercise: following TDD and HTTP mock test
 - Guide to setting up Docker/Laradock to install MySQL
 
-#### Week 3
+#### Topic 3
 
 - Diving into Golang by designing a RESTful API 
 - CRUD service using Go with Gin/Echo framework
@@ -60,18 +62,19 @@ After finishing this course, students will be able to learn how to:
 - Exercise: building an auto increment number and issues with multiple-CPU problems.
 - Exercise: writing Unit Testing Code and DB mock test
 
-#### Week 4
+#### Topic 4
 
 - Design and apply microservice/serverless architecture using Go
-- GRPC and benefits from GRPC
+- RPC, GRPC and benefits from GRPC
 - How to design a new system with GRPC 
 - How to integrate GRPC to an existing system
 - Service discovery with Consul
 - Exercise: using GRPC to refactor note service from topic 2
 - Exercise: API caching, DB connection pool
 
-#### Week 5
+#### Topic 5
 
+- Understand about string operations and UTF8 endcoding in Go
 - Best practices to develop a project with Go & final project
 - CI/CD, logging and monitoring on Production environment
 - Deploy a CI/CD for note services
@@ -79,7 +82,7 @@ After finishing this course, students will be able to learn how to:
 - Overview and requirements of the Final Project 
 - Review and feedback on the course
 
-#### Week 6
+#### Topic 6
 
 - Build your own open source software
 - Build a helper lib (ex: porting underscore)
