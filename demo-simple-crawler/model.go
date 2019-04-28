@@ -39,3 +39,10 @@ type Url struct {
 	Status           UrlStatus
 	DownloadHttpCode int
 }
+
+type SimpleData struct {
+	gorm.Model
+	Title       string
+	Author      string
+	PublishDate string
+}
