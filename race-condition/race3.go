@@ -21,3 +21,6 @@ func main() {
 		fmt.Println(k, v)
 	}
 }
+
+// go build -o race3 race3.go && for i in {1..100}; do ./race3; done;
+// go build -o race3 race3.go && for i in {1..100}; do ./race3 >> race3.txt; done;

@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
+	fmt.Println("------------------")
 	m := make(map[string]string)
 	c := make(chan bool)
 	go func() {
@@ -18,4 +19,5 @@ func main() {
 	}
 }
 
-// go build -o race1 race1.go && for i in {1..100}; do ./race1; done;
+// go build -o race2 race2.go && for i in {1..100}; do ./race2; done;
+// go build -o race2 race2.go && for i in {1..100}; do ./race2 >> race2.txt; done;

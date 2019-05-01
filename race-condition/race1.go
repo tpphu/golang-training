@@ -17,3 +17,4 @@ func main() {
 }
 
 // go build -o race1 race1.go && for i in {1..100}; do ./race1; done;
+// go build -o race1 race1.go && for i in {1..100}; do ./race1 >> race1.txt; done;
