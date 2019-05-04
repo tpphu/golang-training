@@ -1,4 +1,4 @@
-package convert
+package main
 
 import (
 	"bufio"
@@ -64,18 +64,18 @@ func convertCSVToYAML(fn string) (data []*Region, err error) {
 		}
 		line := buffer.String()
 		parts := strings.Split(line, ",")
-		if len(parts) != 6 {
+		if len(parts) < 6 {
 			panic("Line is not correct | data: " + line)
 		}
-		if parts[0] == "" || parts[0] == "Mã Tỉnh" {
+		if parts[0] == "" || parts[0] == "Tỉnh Thành Phố" {
 			continue
 		}
-		regionId, _ := strconv.Atoi(parts[0])
-		regionName := parts[1]
-		districtId, _ := strconv.Atoi(parts[2])
-		districtName := parts[3]
-		wardId, _ := strconv.Atoi(parts[4])
-		wardName := parts[5]
+		regionId, _ := strconv.Atoi(parts[1])
+		regionName := parts[0]
+		districtId, _ := strconv.Atoi(parts[3])
+		districtName := parts[2]
+		wardId, _ := strconv.Atoi(parts[5])
+		wardName := parts[4]
 		region, ok := mapRegion[regionId]
 		if !ok {
 			region = &Region{
