@@ -7,7 +7,7 @@ import (
 func main() {
 	fmt.Println("------------------")
 	m := make(map[string]string)
-	c := make(chan bool)
+	c := make(chan bool) // Unbuffer channel
 	go func() {
 		m["1"] = "a" // First conflicting access.
 		c <- true
