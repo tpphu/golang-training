@@ -8,3 +8,13 @@ func Last(arr interface{}) interface{} {
 
 	return value.Index(value.Len() - 1).Interface()
 }
+
+func Filter(collection interface{}, predicate interface{}) interface{} {
+	// valueOfPredicate := reflect.ValueOf(predicate)
+	// typeOfPredicate := reflect.TypeOf(predicate)
+	// if typeOfPredicate == reflect.Func {
+
+	// 	valueOfPredicate.Call
+	// }
+	return nil
+}
