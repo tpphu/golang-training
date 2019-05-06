@@ -2,21 +2,64 @@ package helper
 
 import "testing"
 
-// func TestIsEmpty(t *testing.T) {
-// 	table := []interface{}{false, "", 0, nil}
-// 	for _, v := range table {
-// 		expected := IsEmpty(v)
-// 		if expected != true {
-// 			t.Error("IsEmpty of \"", v, "\" is failed.")
-// 		}
-// 	}
-// }
+func TestIsEmptySimple(t *testing.T) {
+	table := []interface{}{false, "", 0, nil}
+	for _, v := range table {
+		actual := IsEmpty(v)
+		if actual == false {
+			t.Error("IsEmpty of \"", v, "\" is failed.")
+		}
+	}
+}
 
-func TestIsEmpty(t *testing.T) {
-	var v int32 = 0
-	expected := true
-	actual := IsEmpty(v)
-	if actual != expected {
+func TestIsNotEmptySimple(t *testing.T) {
+	table := []interface{}{true, "t", 1}
+	for _, v := range table {
+		actual := IsEmpty(v)
+		if actual == true {
+			t.Error("IsEmpty of \"", v, "\" is failed.")
+		}
+	}
+}
+
+func TestIsEmptySlice(t *testing.T) {
+	value := []int{}
+	actual := IsEmpty(value)
+	if actual == false {
+		t.Error("Result should be true")
+	}
+}
+
+func TestIsNotEmptySlice(t *testing.T) {
+	value := []int{1}
+	actual := IsEmpty(value)
+	if actual == true {
+		t.Error("Result should be false")
+	}
+}
+
+func TestIsEmptyStruct(t *testing.T) {
+	type User struct {
+		Name   string
+		Age    int
+		Active bool
+	}
+	user := &User{}
+	actual := IsEmpty(user)
+	if actual == false {
+		t.Error("Result should be true")
+	}
+}
+
+func TestIsNotEmptyStruct(t *testing.T) {
+	type User struct {
+		Name   string
+		Age    int
+		Active bool
+	}
+	user := &User{Name: "Phu"}
+	actual := IsEmpty(user)
+	if actual == true {
 		t.Error("Result should be false")
 	}
 }
