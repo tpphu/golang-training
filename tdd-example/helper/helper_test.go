@@ -7,7 +7,7 @@ func TestIsEmpty(t *testing.T) {
 		table := []interface{}{false, "", 0, nil}
 		for _, v := range table {
 			actual := IsEmpty(v)
-			if actual == false {
+			if actual != true {
 				t.Error("IsEmpty of \"", v, "\" is failed")
 			}
 		}
@@ -16,7 +16,7 @@ func TestIsEmpty(t *testing.T) {
 		table := []interface{}{true, "a", 1}
 		for _, v := range table {
 			actual := IsEmpty(v)
-			if actual == true {
+			if actual != false {
 				t.Error("IsEmpty of \"", v, "\" is failed")
 			}
 		}
@@ -24,7 +24,7 @@ func TestIsEmpty(t *testing.T) {
 	t.Run("with is not empty | slice or array case", func(t *testing.T) {
 		value := []int{}
 		actual := IsEmpty(value)
-		if actual == false {
+		if actual != true {
 			t.Error("Result should be true")
 		}
 	})
@@ -36,7 +36,7 @@ func TestIsEmpty(t *testing.T) {
 		}
 		user := &User{Name: "Phu"}
 		actual := IsEmpty(user)
-		if actual == true {
+		if actual != false {
 			t.Error("Result should be false")
 		}
 	})
@@ -48,7 +48,7 @@ func TestIsEmpty(t *testing.T) {
 		}
 		user := &User{}
 		actual := IsEmpty(user)
-		if actual == false {
+		if actual != true {
 			t.Error("Result should be false")
 		}
 	})

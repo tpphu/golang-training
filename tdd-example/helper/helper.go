@@ -1,6 +1,8 @@
 package helper
 
-import "reflect"
+import (
+	"reflect"
+)
 
 func IsEmpty(obj interface{}) bool {
 	if obj == nil || obj == "" || obj == false || obj == 0 {
