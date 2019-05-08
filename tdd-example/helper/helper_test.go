@@ -8,7 +8,7 @@ func TestIsEmpty(t *testing.T) {
 		for _, v := range table {
 			actual := IsEmpty(v)
 			if actual != true {
-				t.Error("IsEmpty of \"", v, "\" is failed")
+				t.Fail()
 			}
 		}
 	})
