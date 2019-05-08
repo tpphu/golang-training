@@ -7,7 +7,7 @@ import (
 func Max(array interface{}) interface{} {
 	valueOfArray := reflect.ValueOf(array)
 	typeOfArray := reflect.TypeOf(array)
-	if typeOfArray.Kind() != reflect.Array || typeOfArray.Kind() != reflect.Slice {
+	if typeOfArray.Kind() != reflect.Array && typeOfArray.Kind() != reflect.Slice {
 		panic("input should be a slice or array")
 	}
 	if valueOfArray.Len() == 0 {

@@ -6,11 +6,22 @@ import (
 
 func TestMax(t *testing.T) {
 	t.Run("Test invalid input", func(t *testing.T) {
-		actual := Max("abc")
-		expected := 8
-		if actual != expected {
-			t.Fail()
-		}
+		defer func() {
+			r := recover()
+			if r == nil {
+				t.Errorf("The code should panic")
+			}
+		}()
+		Max("abc")
+	})
+	t.Run("Test empty input", func(t *testing.T) {
+		defer func() {
+			r := recover()
+			if r == nil {
+				t.Errorf("The code should panic")
+			}
+		}()
+		Max([]int{})
 	})
 	t.Run("Test with int", func(t *testing.T) {
 		arr := []int{4, 2, 8, 6}
