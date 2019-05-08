@@ -55,12 +55,12 @@ func TestContains(t *testing.T) {
 			t.Fail()
 		}
 	})
-	t.Run("with slice in a slice", func(t *testing.T) { //1 What's a case
-		arr := []int{1, 2, 3}
-		actual := Contains(arr, []int{1, 2}) //2. Actually
-		expected := true                     // 3 Expectation
-		if actual != expected {
-			t.Fail()
-		}
-	})
+	// t.Run("with slice in a slice", func(t *testing.T) { //1 What's a case
+	// 	arr := []int{1, 2, 3}
+	// 	actual := Contains(arr, []int{1, 2}) //2. Actually
+	// 	expected := true                     // 3 Expectation
+	// 	if actual != expected {
+	// 		t.Fail()
+	// 	}
+	// })
 }
