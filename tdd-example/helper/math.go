@@ -4,6 +4,9 @@ import (
 	"reflect"
 )
 
+// if len(arr) > 0 {
+//	Max(arr)
+// }
 func Max(array interface{}) interface{} {
 	valueOfArray := reflect.ValueOf(array)
 	typeOfArray := reflect.TypeOf(array)

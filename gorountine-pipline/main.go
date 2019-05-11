@@ -57,6 +57,7 @@ func main() {
 			fmt.Printf("\n[OUT]: %d", v)
 		}
 	}()
+
 	time.Sleep(30 * time.Second)
 
 }
