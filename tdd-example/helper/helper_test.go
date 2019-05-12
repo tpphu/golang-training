@@ -2,6 +2,18 @@ package helper
 
 import "testing"
 
+func BenchmarkIsEmpty(b *testing.B) {
+	type User struct {
+		Name   string
+		Age    int
+		Active bool
+	}
+	user := &User{Name: "Phu"}
+	for i := 0; i < b.N; i++ {
+		IsEmpty(user)
+	}
+}
+
 func TestIsEmpty(t *testing.T) {
 	t.Run("with is empty | simple data case", func(t *testing.T) {
 		table := []interface{}{false, "", 0, nil}
