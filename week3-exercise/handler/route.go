@@ -49,7 +49,7 @@ func initNoteRoutes(engine *gin.Engine, db *gorm.DB) {
 	// 2. Lam logger/tracking
 	// 3. Recovery
 	// 4. Add nhieu cai middleware va no chay tuan tu
-	groupRouter.Use(authenMiddleware)
+	// groupRouter.Use(authenMiddleware)
 	{
 		groupRouter.GET("/:id", func(c *gin.Context) {
 			noteRepository := &repo.NoteRepoImpl{

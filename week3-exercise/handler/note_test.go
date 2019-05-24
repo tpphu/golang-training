@@ -5,10 +5,10 @@ import (
 	"errors"
 	"math/rand"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
-	"strconv"
 
 	mock "../mock"
 	"../model"
@@ -28,7 +28,7 @@ func fakeString(n int) string {
 
 func buildMockContext(method string, path string, data string) *gin.Context {
 	w := httptest.NewRecorder()
-	ctx, _ := gin.CreateTestContext(w)	
+	ctx, _ := gin.CreateTestContext(w)
 	ctx.Request = httptest.NewRequest(method, path, strings.NewReader(data))
 	ctx.Request.Header.Set("Content-Type", "application/json")
 	return ctx
@@ -43,10 +43,9 @@ func Test_NoteCreate_TitleIsEmpty(t *testing.T) {
 	_, err := NoteCreate(ctx, noteRepo)
 	// 3. Kiem tra ket qua la dung nhu mong doi
 	if err == nil {
-		t.Error("Error should not be nil")
+		t.Fail()
 	}
 }
-
 func Test_NoteCreate_TitleHasMinLength(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
 	// 1. Chuan bi input dau vao cho ham CreateNote
@@ -148,7 +147,6 @@ func Test_NoteCreate_TitleMaxLengthWithCorrectError(t *testing.T) {
 	}
 }
 
-
 func Test_NoteUpdate_TitleMaxLengthIsHitLimit(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
 	// 1.1 "[Editted] " len=10 + 245 = 255 still ok
@@ -156,16 +154,16 @@ func Test_NoteUpdate_TitleMaxLengthIsHitLimit(t *testing.T) {
 	id := 1
 	data := `{"title": "` + title + `","completed": false}`
 	ctx := buildMockContext("PUT", "/note/"+strconv.Itoa(id), data)
-	ctx.Params = append(ctx.Params,gin.Param{"id", strconv.Itoa(id)})
+	ctx.Params = append(ctx.Params, gin.Param{"id", strconv.Itoa(id)})
 	// 1.2 Mock db
 	noteRepo := new(mock.NoteRepoImpl)
-	note := model.Note{}	
+	note := model.Note{}
 	json.Unmarshal([]byte(data), &note)
 	note.Title = "[Editted] " + note.Title
 	noteRepo.On("Update", id, note).Return(nil)
 	// 2  Mock function
 	err := NoteUpdate(ctx, noteRepo)
-	// 3. Kiem tra ket qua la dung nhu mong doi	
+	// 3. Kiem tra ket qua la dung nhu mong doi
 	if err != nil {
 		t.Error("This should not be error")
 	}
@@ -178,10 +176,10 @@ func Test_NoteUpdate_TitleMaxLengthCorrectDBError(t *testing.T) {
 	// 1. Tinh huong test pass validation (<255)
 	// 2. Nhung sau do cai ham xu ly lam cho cai Title > 255
 	title := fakeString(255)
-	id:= 1
+	id := 1
 	data := `{"title": "` + title + `","completed": false}`
 	ctx := buildMockContext("PUT", "/note/"+strconv.Itoa(id), data)
-	ctx.Params = append(ctx.Params,gin.Param{"id", strconv.Itoa(id)})
+	ctx.Params = append(ctx.Params, gin.Param{"id", strconv.Itoa(id)})
 	noteRepo := new(mock.NoteRepoImpl)
 	// 2  Mock function
 	err := NoteUpdate(ctx, noteRepo)

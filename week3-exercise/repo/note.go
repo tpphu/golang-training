@@ -18,6 +18,7 @@ type NoteRepoImpl struct {
 	DB *gorm.DB
 }
 
+// 1. That su la co mot func phu thuoc vao db
 func (self *NoteRepoImpl) Create(note model.Note) (*model.Note, error) {
 	err := self.DB.Create(&note).Error
 	return &note, err
