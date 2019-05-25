@@ -13,11 +13,13 @@ type NoteRepoImpl struct {
 }
 
 func (self *NoteRepoImpl) Create(note model.Note) (*model.Note, error) {
-	if len(note.Title) > 255 {
-		return nil, errors.New(`Error 1406: Data too long for column 'title' at row 1`)
+	if len(note.Title) == 0 {
+		return &note, errors.New("Title is empty")
 	}
-	args := self.Called(note)
-	return args.Get(0).(*model.Note), args.Error(1)
+	if len(note.Title) < 6 {
+		return &note, errors.New("Title is less than 6")
+	}
+	return &note, nil
 }
 
 func (self *NoteRepoImpl) Find(id int) (*model.Note, error) {
