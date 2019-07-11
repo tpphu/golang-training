@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -45,24 +44,10 @@ func convertCSVToYAML(fn string) (data []*Region, err error) {
 
 	reader := bufio.NewReader(file)
 	for {
-		var buffer bytes.Buffer
-
-		var l []byte
-		var isPrefix bool
-		for {
-			l, isPrefix, err = reader.ReadLine()
-			buffer.Write(l)
-			if !isPrefix {
-				break
-			}
-			if err != nil {
-				break
-			}
-		}
-		if err == io.EOF {
+		line, err := reader.ReadString('\n')
+		if err != nil {
 			break
 		}
-		line := buffer.String()
 		parts := strings.Split(line, ",")
 		if len(parts) < 6 {
 			panic("Line is not correct | data: " + line)
