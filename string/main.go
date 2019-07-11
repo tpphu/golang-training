@@ -26,7 +26,7 @@ func showDebug1() {
 
 func showDebug2() {
 	var s string
-	s = "Xin chầo"
+	s = "Xin chào"
 	fmt.Println("Length of string: ", len(s))
 	fmt.Println(s)
 
@@ -68,7 +68,7 @@ func showDebug4() {
 	// Rune is a Type.
 	// It occupies 32bit and is meant to represent a Unicode CodePoint.
 	var s string
-	s = "Xin chầo"
+	s = "Xin chào"
 	fmt.Println("Length of string: ", utf8.RuneCountInString(s))
 	fmt.Println(s)
 
@@ -83,7 +83,7 @@ func showDebug4() {
 }
 
 func showDebug5() {
-	s := "Xin chầo"
+	s := "Xin chào"
 
 	for index, char := range s {
 		fmt.Printf("character at %d is %c\n", index, char)
