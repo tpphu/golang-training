@@ -9,17 +9,17 @@ import (
 // https://gobyexample.com/channel-buffering
 // Nhan vao mot danh sach cac so nguyen
 // Tra ra mot channel
-func gen(nums ...int) <-chan int {
+func gen(num int) <-chan int {
 	// Run Step 1
-	// Bufferred Channel
-	out := make(chan int, 4) //capacity
+	// Unbufferred Channel
+	out := make(chan int, 1) //capacity
 	// Run Step 2
 	go func() {
-		for _, n := range nums {
+		for i := 1; i < num; i++ {
 			// Chi day dc vao channel khi ma len < capacity
-			out <- n
+			out <- i
 			// In ra o day co nghia la da push dc
-			fmt.Printf("\n[GEN] channel: %d", n)
+			fmt.Printf("\n[GEN] channel: %d", i)
 		}
 		close(out)
 	}()
@@ -40,23 +40,24 @@ func sq(in <-chan int) <-chan int {
 	return out
 }
 
+func print(in <-chan int) {
+	for v := range in {
+		time.Sleep(1 * time.Second)
+		fmt.Printf("\n[OUT]: %d", v)
+		fmt.Println("\n-------------")
+	}
+}
+
 func main() {
 	fmt.Println("Num CPUs:", runtime.NumCPU())
 	// runtime.GOMAXPROCS(1)
 	// Set up the pipeline.
-	c := gen(2, 3, 4, 5)
-	out := sq(c)
-
-	// Consume the output.
-	go func() {
-		// Vi out la Unbufferred Channel
-		// nen khi sleep, thi func sq khong the push them dc value vao sq channel
-		// do vay ban se khong thay dong in ra
-		for v := range out {
-			time.Sleep(1 * time.Second)
-			fmt.Printf("\n[OUT]: %d", v)
-		}
-	}()
+	// Step 1. Tao ra cai input channel
+	in := gen(10)
+	// Step 2. Dung cai in => tao ra cai out channel
+	out := sq(in)
+	// Step 3. Dung cai out thanh in cua step print
+	go print(out)
 
 	time.Sleep(30 * time.Second)
 
