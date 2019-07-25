@@ -65,12 +65,12 @@ func main() {
 	if err != nil {
 		log.Fatalln("Can't find consul:", err)
 	}
-	services, _, err := serviceConsul.Service("greeter", "")
+	services, _, err := serviceConsul.Service("ping-service", "")
 	if err != nil {
 		log.Fatalln("Discover failed:", err)
 	}
 	log.Println("Found service at these locations:")
 	for _, v := range services {
-		log.Println(fmt.Sprintf("%s:%d", v.Node.Address, v.Service.Port))
+		log.Println(fmt.Sprintf("%s:%d", v.Service.Address, v.Service.Port))
 	}
 }
