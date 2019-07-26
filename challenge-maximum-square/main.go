@@ -1,55 +1,54 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func SquareArea(strArr []string, x0, y0 int) (area int) {
-	rows := len(strArr)
-	cols := len(strArr[0])
-	if strArr[x0][y0] != '1' {
+	if strArr[y0][x0] != '1' {
 		return 0
 	}
-	vertex := 0
-	isStop := false
-	for ; ; vertex++ {
-		if vertex >= (cols-y0) || vertex >= (rows-x0) {
+	maxY := len(strArr)
+	maxX := len(strArr[0])
+	square := 2
+	for ; square <= maxX-x0 && square <= maxY-y0; square++ {
+		if !isValidRow(strArr, square, x0, y0) {
 			break
 		}
-		vRows := x0 + vertex
-		vCols := y0 + vertex
-		// Theo dong
-		for i := y0; i <= vCols; i++ {			
-			if strArr[vRows][i] != '1' {
-				isStop = true
-				break
-			}
-		}
-		// Theo cot
-		for i := x0; i <= vRows; i++ {
-			if strArr[i][vCols] != '1' {
-				isStop = true
-				break
-			}
-		}
-		
-		if isStop {
+		if !isValidCol(strArr, square, x0, y0) {
 			break
 		}
 	}
-	return vertex  * vertex
+	return (square - 1) * (square - 1)
 }
 
-/**
- * Muc tieu cua func nay la de:
- * 1. Tim cac squre di tu vi tri [x, y]
- * 2. So sanh voi square truoc do de cap nhat square lon hon
- */
-func MaximalSquare(strArr []string) (maxArea int) {
-	rows := len(strArr)
-	cols := len(strArr[0])
-	for x := 0; x < rows; x++ {
-		for y := 0; y < cols; y++ {
+func isValidRow(strArr []string, square, x0, y0 int) bool {
+	for x := x0; x < x0+square; x++ {
+		if strArr[y0+square-1][x] != '1' {
+			return false
+		}
+	}
+	return true
+}
+
+func isValidCol(strArr []string, square, x0, y0 int) bool {
+	for y := y0; y < y0+square; y++ {
+		if strArr[y][x0+square-1] != '1' {
+			return false
+		}
+	}
+	return true
+}
+
+func MaximalSquare(strArr []string) int {
+	// Step 1 -> Visit to each point of matrix
+	// Step 2 - Find max square at this point
+	maxArea := 0
+	maxY := len(strArr)
+	maxX := len(strArr[0])
+	for x := 0; x < maxX && maxX-x > maxArea; x++ {
+		for y := 0; y < maxY && maxY-y > maxArea; y++ {
 			area := SquareArea(strArr, x, y)
-			// fmt.Printf("square at [%d, %d] is %d\n", x, y, area)
 			if area > maxArea {
 				maxArea = area
 			}
@@ -61,10 +60,10 @@ func MaximalSquare(strArr []string) (maxArea int) {
 func main() {
 
 	// do not modify below here, readline is our function
-	// that properly reads in the input for you
+	// that operly reads in the input for you
 	fmt.Println(MaximalSquare(readline()))
 }
 
-func readline() []string{
+func readline() []string {
 	return []string{"1111", "1101", "1111", "0111"}
 }
