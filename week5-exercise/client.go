@@ -7,11 +7,12 @@ import (
 
 	proto "./proto"
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/service/grpc"
 )
 
 func main() {
 	// 1. Create service
-	service := micro.NewService(
+	service := grpc.NewService(
 		micro.Name("greeter"),
 	)
 	service.Init()

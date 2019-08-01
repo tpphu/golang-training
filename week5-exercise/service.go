@@ -8,6 +8,7 @@ import (
 
 	proto "./proto"
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/service/grpc"
 )
 
 type Greeter struct{}
@@ -20,7 +21,7 @@ func (g *Greeter) Hello(ctx context.Context, req *proto.HelloRequest, rsp *proto
 
 func main() {
 	// 1. Create service
-	service := micro.NewService(
+	service := grpc.NewService(
 		micro.Name("greeter"), // Quan trong la co mot cai ten
 	)
 	// 1.1 Registry to Consul
