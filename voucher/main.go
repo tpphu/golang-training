@@ -29,20 +29,20 @@ func main() {
 			return
 		}
 		// S2: Kiem tra co ton tai trong db khong
-		isExist, err := voucherStorage.IsExit(voucher)
-		if err != nil {
-			c.JSON(400, err)
-			return
-		}
+		// isExist, err := voucherStorage.IsExit(voucher)
+		// if err != nil {
+		// 	c.JSON(400, err)
+		// 	return
+		// }
 
-		if isExist {
-			c.JSON(400, gin.H{
-				"error": "Exist",
-			})
-			return
-		}
+		// if isExist {
+		// 	c.JSON(400, gin.H{
+		// 		"error": "Exist",
+		// 	})
+		// 	return
+		// }
 		// S3: Insert vo db neu no chua ton tai
-		voucherStorage.RegisterAtomic(&voucher)
+		voucherStorage.RegisterIsolation(&voucher)
 		c.JSON(200, voucher)
 	})
 	r.GET("/verify", func(c *gin.Context) {
