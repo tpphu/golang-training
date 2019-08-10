@@ -11,6 +11,9 @@ type Voucher struct {
 	DB *sql.DB
 }
 
+const REGISTER_ATOMIC = "INSERT INTO `voucher`(`code`, `discount`, `start`, `end`) " +
+	"SELECT ?, ?, ?, ? " +
+	"WHERE 0 = (SELECT count(*) FROM `voucher` WHERE `code` = ? AND ? >= `start` AND ? <= `end` LIMIT 1)"
 const REGISTER = "INSERT INTO `voucher`(`code`, `discount`, `start`, `end`) " +
 	"VALUES(?, ?, ?, ?)"
 
@@ -30,6 +33,16 @@ func (s Voucher) IsExit(voucher model.Voucher) (bool, error) {
 		return true, nil
 	}
 	return false, nil
+}
+
+func (s Voucher) RegisterAtomic(voucher *model.Voucher) error {
+	_, err := s.DB.Exec(REGISTER_ATOMIC,
+		voucher.Code, voucher.Discount, voucher.Start, voucher.End,
+		voucher.Code, voucher.End, voucher.Start)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s Voucher) Register(voucher *model.Voucher) error {

@@ -14,6 +14,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	db.SetMaxOpenConns(50)
+	db.SetMaxIdleConns(30)
 	defer db.Close()
 	r := gin.Default()
 	r.POST("/register", func(c *gin.Context) {
@@ -21,22 +23,26 @@ func main() {
 		voucherStorage := storage.Voucher{
 			DB: db,
 		}
+		// S1: Lay data tu client
 		if err := c.ShouldBindJSON(&voucher); err != nil {
 			c.JSON(400, err)
 			return
 		}
+		// S2: Kiem tra co ton tai trong db khong
 		isExist, err := voucherStorage.IsExit(voucher)
 		if err != nil {
 			c.JSON(400, err)
 			return
 		}
+
 		if isExist {
 			c.JSON(400, gin.H{
 				"error": "Exist",
 			})
 			return
 		}
-		voucherStorage.Register(&voucher)
+		// S3: Insert vo db neu no chua ton tai
+		voucherStorage.RegisterAtomic(&voucher)
 		c.JSON(200, voucher)
 	})
 	r.GET("/verify", func(c *gin.Context) {
