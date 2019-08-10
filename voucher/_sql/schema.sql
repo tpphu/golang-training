@@ -11,3 +11,11 @@ COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=1535
 ;
+
+select v1.id, v1.code, v1.`start`, v1.`end`, v2.id, v2.`start`, v2.`end`
+from voucher as v1
+join voucher as v2
+on v1.code = v2.code
+where v2.id > v1.id
+and  v2.`start`<= v1.`end` AND v2.`end` >= v1.`start` 
+LIMIT 10;
