@@ -14,7 +14,7 @@ import (
 type Greeter struct{}
 
 func (g *Greeter) Hello(ctx context.Context, req *proto.HelloRequest, rsp *proto.HelloResponse) error {
-	rsp.Greeting = "Hello " + req.Name
+	rsp.Greeting = "Xin chao " + req.Name
 	fmt.Println(time.Now(), "Hello from server")
 	return nil
 }
@@ -31,6 +31,7 @@ func main() {
 	proto.RegisterGreeterHandler(service.Server(), new(Greeter))
 
 	// 3.  Run the server
+	fmt.Println("Start server")
 	if err := service.Run(); err != nil {
 		fmt.Println(err)
 	}

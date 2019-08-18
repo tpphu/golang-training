@@ -1,15 +1,23 @@
 package main
 
 import (
+	"database/sql"
+	"log"
+	"os"
+
 	"./model"
 	"./storage"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-import "database/sql"
-import _ "github.com/go-sql-driver/mysql"
-
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	db, err := sql.Open("mysql", "default:secret@/voucher")
 	if err != nil {
 		panic(err)
@@ -49,10 +57,11 @@ func main() {
 		voucher := model.Voucher{}
 		c.JSON(200, voucher)
 	})
+	port := os.Getenv("PORT")
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message": "pong from " + port,
 		})
 	})
-	r.Run(":8080") // listen and serve on 0.0.0.0:8080
+	r.Run(":" + port) // listen and serve on 0.0.0.0:8080
 }
