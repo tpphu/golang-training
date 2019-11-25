@@ -1,8 +1,10 @@
 package main
 
-import "fmt"
-import "runtime"
-import "sync/atomic"
+import (
+	"fmt"
+	"runtime"
+	"sync/atomic"
+)
 
 func main() {
 	var a, b int32 = 0, 0
