@@ -1,36 +1,67 @@
 package helper
 
-import "testing"
+import (
+	"fmt"
+	"reflect"
+	"testing"
+)
 
-func TestMaxInt(t *testing.T) {
-	type args struct {
-		list []int
-	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{{
-		name: "Test with normal array",
-		args: args{[]int{1, 2, 3, 4}},
-		want: 4,
-	}}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := MaxInt(tt.args.list); got != tt.want {
-				t.Errorf("MaxInt() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestMaxInt_1(t *testing.T) {
+func TestMax_1(t *testing.T) {
 
 	list := []int{1, 2, 3, 4}
 
-	actual := MaxInt(list)
+	actual, err := Max(list)
+	if err != nil {
+		t.Error("This case should not error")
+	}
 	expect := 4
 	if actual != expect {
-		t.Errorf("MaxInt() = %v, want %v", actual, expect)
+		t.Errorf("Max() = %v, want %v", actual, expect)
 	}
+}
+
+func TestMax_2(t *testing.T) {
+
+	list := []float32{1.0, 2.1, 3.3, 4.4}
+
+	actual, err := Max(list)
+	if err != nil {
+		t.Error("This case should not error")
+	}
+	// Se check lai va tra loi default float no luon la 64 hay la tuy thuoc
+	// may 64bit hay 32bit
+	expect := 4
+	kind := reflect.ValueOf(expect).Kind()
+	if kind == reflect.Int {
+		fmt.Println("The default float is Int")
+	} else {
+		fmt.Println("The default float is not Int")
+	}
+	if actual != expect {
+		t.Errorf("Max() = %v, want %v", actual, expect)
+	}
+}
+
+func TestMax_3(t *testing.T) {
+	list := ""
+	_, err := Max(list)
+	if err != InvalidInputError {
+		t.Errorf("This test case expected an error: %v", err)
+	}
+}
+
+func TestMax_4(t *testing.T) {
+
+	list := []interface{}{1.0, 2, "abc", true}
+
+	_, err := Max(list)
+	if err == nil {
+		t.Error("This case should be error")
+	}
+	// Se check lai va tra loi default float no luon la 64 hay la tuy thuoc
+	// may 64bit hay 32bit
+	// expect := 4
+	// if actual != expect {
+	// 	t.Errorf("Max() = %v, want %v", actual, expect)
+	// }
 }
