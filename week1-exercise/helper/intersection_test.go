@@ -25,3 +25,13 @@ func TestIntersectionSimple(t *testing.T) {
 		t.Errorf("IntersectionInt() = %v, want: %v", actual, expect)
 	}
 }
+
+func TestIntersection_2(t *testing.T) {
+	lista := []int{1, 2, 3, 4, 5}
+	listb := []int{2, 3, 4, 5, 6}
+	expect := []int{2, 3, 4, 5}
+	actual, _ := IntersectionInt(lista, listb)
+	if reflect.DeepEqual(actual, expect) != true {
+		t.Errorf("IntersectionInt() = %v, want: %v", actual, expect)
+	}
+}
