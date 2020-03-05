@@ -5,8 +5,12 @@ import (
 	"log"
 	"os"
 
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
+
+	"github.com/tpphu/golang-trainning/model"
 )
 
 func main() {
@@ -58,6 +62,13 @@ func main() {
 				Aliases: []string{"m"},
 				Usage:   "Migrate schema to DB",
 				Action: func(c *cli.Context) error {
+					db, err := gorm.Open("mysql", c.String("database"))
+					if err != nil {
+						panic(err)
+					}
+					fmt.Println(`c.Bool("dblog")`, c.Bool("dblog"))
+					db.LogMode(c.Bool("dblog"))
+					db.AutoMigrate(&model.Url{}, &model.Article{})
 					return nil
 				},
 			},
