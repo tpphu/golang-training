@@ -66,8 +66,8 @@ func main() {
 					if err != nil {
 						panic(err)
 					}
-					fmt.Println(`c.Bool("dblog")`, c.Bool("dblog"))
 					db.LogMode(c.Bool("dblog"))
+					db.DropTableIfExists(&model.Url{}, &model.Article{})
 					db.AutoMigrate(&model.Url{}, &model.Article{})
 					return nil
 				},
@@ -77,6 +77,19 @@ func main() {
 				Aliases: []string{"s"},
 				Usage:   "Seed data to DB",
 				Action: func(c *cli.Context) error {
+					db, err := gorm.Open("mysql", c.String("database"))
+					if err != nil {
+						panic(err)
+					}
+					db.LogMode(c.Bool("dblog"))
+					urls := []model.Url{model.Url{
+						URL: "https://vnexpress.net/the-gioi/iran-ghi-nhan-ky-luc-hon-1-200-ca-nhiem-ncov-moi-4065455.html",
+					}, model.Url{
+						URL: "http://tiasang.com.vn/-quan-ly-khoa-hoc/Thay-doi-trong-dau-tu-congtu-cho-khoa-hoc-20767",
+					}}
+					for i := 0; i < len(urls); i++ {
+						db.Create(&urls[i])
+					}
 					return nil
 				},
 			},

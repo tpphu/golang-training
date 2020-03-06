@@ -12,6 +12,5 @@ type Article struct {
 	Title       string
 	Content     string
 	Author      string
-	Status      int
 	PublishedAt time.Time
 }
