@@ -11,6 +11,6 @@ type Url struct {
 	gorm.Model
 	URL              string
 	Status           bool
-	State            UrlState
+	State            UrlState `gorm:"default:1"`
 	DownloadHttpCode int
 }

@@ -106,7 +106,8 @@ func main() {
 					}
 					for i := 0; i < len(urls); i++ {
 						db.Create(&model.Url{
-							URL: urls[i],
+							URL:   urls[i],
+							State: model.UrlStateIdle,
 						})
 					}
 					return nil
