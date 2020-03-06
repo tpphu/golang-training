@@ -7,11 +7,17 @@ import (
 	"github.com/tpphu/golang-trainning/model"
 )
 
-type App struct {
+type Application struct {
 	db *gorm.DB
 }
 
-func (app App) Load() <-chan model.Url {
+func NewApp(db *gorm.DB) Application {
+	return Application{
+		db: db,
+	}
+}
+
+func (app Application) Load() chan model.Url {
 	urlChan := make(chan model.Url, 10)
 	go func() {
 		for {
@@ -30,4 +36,14 @@ func (app App) Load() <-chan model.Url {
 		}
 	}()
 	return urlChan
+}
+
+func (app Application) Crawl(chan model.Url) chan model.Article {
+	articleChan := make(chan model.Article, 10)
+	go func() {
+		for {
+
+		}
+	}()
+	return articleChan
 }

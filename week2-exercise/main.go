@@ -10,6 +10,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
 
+	"github.com/tpphu/golang-trainning/app"
 	"github.com/tpphu/golang-trainning/model"
 )
 
@@ -65,7 +66,10 @@ func main() {
 				Usage:   "Start the service",
 				Action: func(c *cli.Context) error {
 					fmt.Println("Start the service")
-					// db := c.App.Metadata["db"].(*gorm.DB)
+					db := c.App.Metadata["db"].(*gorm.DB)
+					app := app.NewApp(db)
+					urls := app.Load()
+					_ = app.Crawl(urls)
 					return nil
 				},
 			},
