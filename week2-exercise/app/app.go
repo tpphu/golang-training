@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -38,12 +39,24 @@ func (app Application) Load() chan model.Url {
 	return urlChan
 }
 
-func (app Application) Crawl(chan model.Url) chan model.Article {
+func (app Application) Crawl(urls chan model.Url) chan model.Article {
 	articleChan := make(chan model.Article, 10)
 	go func() {
 		for {
-
+			url := <-urls
+			articleChan <- model.Article{
+				UrlID: url.ID,
+			}
+			time.Sleep(1 * time.Second)
 		}
 	}()
 	return articleChan
+}
+
+func (app Application) InsertArticleToDb(articles chan model.Article) {
+	for {
+		article := <-articles
+		fmt.Println("Insert article:", article.UrlID)
+		time.Sleep(1 * time.Second)
+	}
 }

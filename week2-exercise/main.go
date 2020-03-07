@@ -69,7 +69,8 @@ func main() {
 					db := c.App.Metadata["db"].(*gorm.DB)
 					app := app.NewApp(db)
 					urls := app.Load()
-					_ = app.Crawl(urls)
+					articles := app.Crawl(urls)
+					app.InsertArticleToDb(articles)
 					return nil
 				},
 			},
