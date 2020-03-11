@@ -21,6 +21,9 @@ func main() {
 	r := gin.Default()
 	r.Use(apmgin.Middleware(r))
 	r.GET("/ping2", func(c *gin.Context) {
+		// Xu ly cai gi do chan che o day
+		time.Sleep(time.Millisecond * 750)
+		// Sau do goi http request
 		tx := apm.TransactionFromContext(c.Request.Context())
 		// defer tx.End()
 		// fmt.Println("tx.EnsureParent()=", tx.EnsureParent())
@@ -30,7 +33,10 @@ func main() {
 		resp, _ := client.Do(req.WithContext(ctx))
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
-		time.Sleep(time.Second * 1)
+		span := tx.StartSpan("Select", "SQL", nil)
+		defer span.End()
+		time.Sleep(time.Millisecond * 250)
+
 		c.JSON(200, gin.H{
 			"message2": "pong2",
 			"message3": string(body),

@@ -21,6 +21,9 @@ func main() {
 	r := gin.Default()
 	r.Use(apmgin.Middleware(r))
 	r.GET("/ping1", func(c *gin.Context) {
+		// Xu ly cai gi do chan che o day
+		time.Sleep(time.Millisecond * 500)
+		// Goi network
 		tx := apm.TransactionFromContext(c.Request.Context())
 		client := apmhttp.WrapClient(http.DefaultClient)
 		req, _ := http.NewRequest("GET", "http://localhost:8082/ping2", nil)
@@ -28,7 +31,8 @@ func main() {
 		resp, _ := client.Do(req.WithContext(ctx))
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
-		time.Sleep(time.Second * 1)
+		// Xu ly cai gi do chan che o day
+		time.Sleep(time.Millisecond * 500)
 		c.JSON(200, gin.H{
 			"message1": "pong1",
 			"message2": string(body),

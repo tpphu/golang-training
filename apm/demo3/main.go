@@ -21,7 +21,6 @@ func main() {
 		c.JSON(200, gin.H{
 			"message3": "pong3",
 		})
-
 	})
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
