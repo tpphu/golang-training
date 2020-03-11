@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -20,15 +21,14 @@ func main() {
 	r := gin.Default()
 	r.Use(apmgin.Middleware(r))
 	r.GET("/ping1", func(c *gin.Context) {
-		tx := apm.DefaultTracer.StartTransaction("ping 1", "http")
-		defer tx.End()
-		// Call ping 2
+		tx := apm.TransactionFromContext(c.Request.Context())
 		client := apmhttp.WrapClient(http.DefaultClient)
 		req, _ := http.NewRequest("GET", "http://localhost:8082/ping2", nil)
 		ctx := apm.ContextWithTransaction(c, tx)
 		resp, _ := client.Do(req.WithContext(ctx))
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
+		time.Sleep(time.Second * 1)
 		c.JSON(200, gin.H{
 			"message1": "pong1",
 			"message2": string(body),
