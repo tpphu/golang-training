@@ -16,13 +16,8 @@ var Start = cli.Command{
 	Usage: "Start the application",
 	Action: func(c *cli.Context) error {
 		db := c.App.Metadata["db"].(*gorm.DB)
-		svc := service.NewCrawlerService(db)
-		// Doc lap chi load urls tu trong db
-		urls := svc.Load()
-		// Neu ma co urls tu trong db => no se crawl
-		articles := svc.Crawl(urls)
-		// Neu crawl dc ve content => no insert vao trong db
-		svc.InsertArcitlesToDB(articles)
+		svc := service.NewAPIService(db)
+		svc.Start()
 		return nil
 	},
 }
