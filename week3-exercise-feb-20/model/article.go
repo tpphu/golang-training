@@ -8,9 +8,9 @@ import (
 
 type Article struct {
 	gorm.Model
-	UrlID       uint
+	URLID       uint
 	Title       string
 	Content     string
-	Author      string
 	PublishedAt time.Time
+	Author      string
 }
