@@ -11,8 +11,8 @@ var Migrate = cli.Command{
 	Usage: "Migreate schema to database",
 	Action: func(c *cli.Context) error {
 		db := c.App.Metadata["db"].(*gorm.DB)
-		db.DropTableIfExists(&model.Url{}, &model.Article{})
-		db.AutoMigrate(&model.Url{}, &model.Article{})
+		db.DropTableIfExists(&model.Url{}, &model.Article{}, &model.Note{})
+		db.AutoMigrate(&model.Url{}, &model.Article{}, &model.Note{})
 		return nil
 	},
 }

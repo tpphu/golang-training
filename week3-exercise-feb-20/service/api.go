@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/tpphu/week2-exercise/handler"
 )
 
 type APIService struct {
@@ -16,10 +17,6 @@ func NewAPIService(db *gorm.DB) APIService {
 }
 func (s APIService) Start() {
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	handler.InitRouter(r, s.db)
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
