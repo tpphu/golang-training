@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package note;
+
+import "google/protobuf/timestamp.proto";
+
+service NoteService {
+  rpc Create(NoteReq) returns (Note) {}
+  rpc Find(NoteFindReq) returns (Note) {}
+  rpc Update(NoteUpdateReq) returns (Note) {}
+  rpc Delete(NoteDeleteReq) returns (NoteDeleteRes) {}
+}
+
+// Con so phai khac nhau, duy nhat
+// 
+message Note {
+  int32 id = 1;
+  string title = 2;
+  bool completed = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message NoteReq {
+  string title = 1;
+  bool completed = 2;
+}
+
+message NoteFindReq {
+  int32 id = 1;
+}
+
+message NoteUpdateReq {
+  int32 id = 1;
+  string title = 4;
+  bool completed = 3;//Co tinh sai loi chinh ta
+  //int khong ro la 
+}
+
+message NoteDeleteReq {
+  int32 id = 1;
+}
+
+message NoteDeleteRes {
+  bool success = 1;
+}
