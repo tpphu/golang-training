@@ -1,0 +1,64 @@
+50008
+4.000.000.000
+(4byte)
+var n int = 400000000
+
+
+Chào
+C=67: 43
+à=224: E0 ~ C3 A0
+224: char code, hay code point
+C3A0
+50080
+110 00011 10 100000
+00011100000
+11100000
+224~E0
+
+Câu hỏi đặt ra là:
+Bạn có thể viết cái utf8-encode:
+utf8encode(charcode int) int{
+	
+	return 
+}
+
+utf8encode(224) => 50080
+utf8decode(50080) => 224
+
+utf8encode(7847) = tuỳ anh
+
+
+ascii - 0 - 127
+
+abcdef
+à
+ầ
+
+Unicode
+
+>127
+0
+1
+2
+3
+4
+5
+30: 0
+31: 1
+67: C
+127:
+224: à
+...
+7847: ầ
+
+locdeptrai_encode(7847): 13
+locdeptrai_encode(13):7847
+
+
+ban đàu => zip => tuỳ 1 <= ra ban
+f1 => rar không được.
+png
+jpg
+tiff
+gz
+tar
