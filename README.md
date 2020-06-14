@@ -7,9 +7,9 @@
 **[Phu, Tran Phong](https://www.linkedin.com/in/tpphu/)**
 Developer and Instructor
 
-I'm Phu, I'm a developer with a passion for teaching. I'm instructor at Nordic Coder, teaching many courses about backend and frontend such as Golang/Nodejs/PHP, ES/MySQL and Reactjs/Angular. I've helped students learn to code, improve their skills. I've been invited/collaborated by companies such as ABC, Grab VN to build the courses for training their employees.
+I'm Phu, I'm a developer with a passion for teaching. I'm an academic advisor and instructor at Nordic Coder. My expertise and skills are about big data, distributed system, continuous deployment. I have been teaching many courses about backend and frontend such as Golang/Nodejs/PHP, ES/MySQL and Reactjs/Angular. I've helped students learn to code, improve their skills. I've been invited/collaborated by companies such as ABC, Grab VN to build the courses for training their employees.
 
-I spend most of my time to researching latest methodologies, technologies, skills which should be have for developers to help them learn to lean code, code for fun and love, and make hard concepts easy to understand.
+I spend most of my time to researching latest methodologies, technologies, skills which should be have for developers to help them learn to make code better, code for fun and love, and make hard concepts easy to understand.
 
 Welcome to my course, I am on way to help you.
 
@@ -32,24 +32,25 @@ After finishing this course, students will be able to learn how to:
 - Overview on the fastest growing language and why we should learn Golang
 - Set up environments & code organization
 - Go characteristics and principles
+- How Go runs in single CPU and multiple CPUs
 - Reflection and Go's reflect package
 - Exercise: converting CSV to YAML using pointer
-- Exercise: cloning Lodash to deep dive into Go
-- Exercise: practising TDD methodology
+- Exercise: cloning Lodash/Underscore to deep dive into Go
+- Exercise: practicing TDD methodology
 
 
 #### Topic 2
 
-- Diving into Golang by designing a scripting/job 
+- Pointer in Go
 - Discover goroutines, channel, defer, panic, recover
 - Error handling in Go
 - Pipeline programming in Go
-- How Go runs in single CPU and multiple CPUs
 - Working with database/mysql
+- Diving into Golang by designing a scripting/job 
 - Strategy to watch scripting/job
+- Guide to setting up Docker/Laradock to install MySQL
 - Exercise: building a crawler
 - Exercise: following TDD and HTTP mock test
-- Guide to setting up Docker/Laradock to install MySQL
 
 #### Topic 3
 
@@ -64,21 +65,20 @@ After finishing this course, students will be able to learn how to:
 
 #### Topic 4
 
-- Design and apply microservice/serverless architecture using Go
+- Design and apply microservices/serverless architecture using Go
 - RPC, GRPC and benefits from GRPC
 - How to design a new system with GRPC 
 - How to integrate GRPC to an existing system
-- Service discovery with Consul
 - Exercise: using GRPC to refactor note service from topic 2
 - Exercise: API caching, DB connection pool
+- Exercise: writing a Voucher service
 
 #### Topic 5
 
-- Understand about string operations and UTF8 endcoding in Go
+- Understand about string operations and UTF8 encoding in Go
 - Best practices to develop a project with Go & final project
-- CI/CD, logging and monitoring on Production environment
-- Deploy a CI/CD for note services
-- Log and monitor with ELK stack
+- CI/CD, logging and monitoring on Production environment with ELK stack
+- Deploy a CI/CD for note services with Jenkins/K8S
 - Overview and requirements of the Final Project 
 - Review and feedback on the course
 
