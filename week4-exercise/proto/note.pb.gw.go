@@ -9,13 +9,13 @@ It translates gRPC into RESTful JSON APIs.
 package note
 
 import (
-	"context"
 	"io"
 	"net/http"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/utilities"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
@@ -65,14 +65,14 @@ func RegisterNoteServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.Se
 	defer func() {
 		if err != nil {
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Printf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 			return
 		}
 		go func() {
 			<-ctx.Done()
 			if cerr := conn.Close(); cerr != nil {
-				grpclog.Infof("Failed to close conn to %s: %v", endpoint, cerr)
+				grpclog.Printf("Failed to close conn to %s: %v", endpoint, cerr)
 			}
 		}()
 	}()
@@ -83,19 +83,20 @@ func RegisterNoteServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.Se
 // RegisterNoteServiceHandler registers the http handlers for service NoteService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
 func RegisterNoteServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterNoteServiceHandlerClient(ctx, mux, NewNoteServiceClient(conn))
-}
-
-// RegisterNoteServiceHandlerClient registers the http handlers for service NoteService
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "NoteServiceClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "NoteServiceClient"
-// doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "NoteServiceClient" to call the correct interceptors.
-func RegisterNoteServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client NoteServiceClient) error {
+	client := NewNoteServiceClient(conn)
 
 	mux.Handle("DELETE", pattern_NoteService_Delete_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
+		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
+		if cn, ok := w.(http.CloseNotifier); ok {
+			go func(done <-chan struct{}, closed <-chan bool) {
+				select {
+				case <-done:
+				case <-closed:
+					cancel()
+				}
+			}(ctx.Done(), cn.CloseNotify())
+		}
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		rctx, err := runtime.AnnotateContext(ctx, mux, req)
 		if err != nil {
