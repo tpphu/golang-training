@@ -1,0 +1,69 @@
+// Khai bao version
+syntax = "proto3";
+
+// Use with gofast
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
+service ProductService {
+  rpc Add(AddReq) returns(AddRes);
+  rpc Update(UpdateReq) returns(UpdateRes);
+  rpc Delete(DeleteReq) returns(DeleteRes);
+  rpc Get(GetReq) returns(GetRes);
+}
+
+// RPC req/res mgs
+
+message AddReq {
+    string sku = 2;
+    string name = 3;
+    float price = 4;
+    int32 qty = 5;
+}
+
+message AddRes {
+    Product product = 1; // Update id
+    Error error = 2;
+}
+
+message UpdateReq {
+    Product product = 1;
+}
+
+message UpdateRes {
+    Product product = 1; // Update id
+    Error error = 2;
+}
+
+message DeleteReq {
+    int32 id = 1;
+}
+
+message DeleteRes {
+    bool success = 1;
+    Error error = 2;
+}
+
+message GetReq {
+    int32 id = 1;
+}
+
+message GetRes {
+    Product product = 1;
+    Error error = 2;
+}
+
+// Structure message
+
+message Product {
+    int32 id = 1 [(gogoproto.moretags) = "gorm:\"primary_key\""];
+    string sku = 2;
+    string name = 3;
+    float price = 4;
+    int32 qty = 5;
+}
+
+message Error {
+    int32 code = 1; // code
+    string message = 2; // input is not valid
+    map<string, string> metadata = 3;
+}

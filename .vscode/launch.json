@@ -9,7 +9,10 @@
       "type": "go",
       "request": "launch",
       "mode": "debug",
-      "program": "${file}"
+      "program": "${file}",
+      "env": {
+        "GO111MODULE": "on"
+      },  
     },
     {
       "name": "Launch",
@@ -17,7 +20,9 @@
       "request": "launch",
       "mode": "auto",
       "program": "${fileDirname}",
-      "env": {},
+      "env": {
+        "GO111MODULE": "on"
+      },
       "args": []
     }
   ]
