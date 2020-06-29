@@ -5,18 +5,18 @@ import (
 	"testing"
 
 	product "../proto"
-
-	_ "github.com/go-sql-driver/mysql" // De minh import thu vien cho thang gorm xai
-	"github.com/jinzhu/gorm"
+	repo "./mock"
 )
 
+// Code test dc la: testable
+// Dependency Inversion Prinple/Giam su phu thuoc
+// Code nhung gi ma minh viet ra
+// SOLID:
 func TestGet(t *testing.T) {
-	// Mock DB
-	// Quan trong
-	// Cac ban tim hieu
-	db, _ := gorm.Open("mysql", "root:root@(127.0.0.1)/gomay20?charset=utf8&parseTime=True&loc=Local")
+
+	productRepo := repo.ProductRepoImp{}
 	service := productService{
-		DB: db,
+		productRepository: productRepo,
 	}
 	req := product.GetReq{
 		Id: 1,
@@ -31,4 +31,20 @@ func TestGet(t *testing.T) {
 	if res.Product.Id != 1 {
 		t.Error("Product Id should be 1")
 	}
+}
+
+func TestGetWithNotFound(t *testing.T) {
+
+	productRepo := repo.ProductRepoImp{}
+	service := productService{
+		productRepository: productRepo,
+	}
+	req := product.GetReq{
+		Id: 2,
+	}
+	_, err := service.Get(context.TODO(), &req)
+	if err == nil {
+		t.Error("Product should not found")
+	}
+
 }

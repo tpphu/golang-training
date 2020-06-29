@@ -7,6 +7,7 @@ import (
 
 	product "../proto"
 	model "./model"
+	repo "./repo"
 	_ "github.com/go-sql-driver/mysql" // De minh import thu vien cho thang gorm xai
 	"github.com/jinzhu/gorm"
 	"google.golang.org/grpc"
@@ -14,14 +15,17 @@ import (
 
 // Nhiem vu that su cua chung
 type productService struct {
-	DB *gorm.DB
+	productRepository repo.Product // interface
 }
 
 func (s *productService) Add(ctx context.Context, req *product.AddReq) (res *product.AddRes, err error) {
 	// Fill vao gorm de insert
-	p := model.Product{}
+	p := &model.Product{}
 	p.Set(req)
-	s.DB.Create(&p)
+	err = s.productRepository.Create(p)
+	if err != nil {
+		return nil, err
+	}
 	// Fill nguoc lai cai Product ma ban khai bao trong proto
 	productRet := &product.Product{}
 	p.Fill(productRet)
@@ -36,8 +40,10 @@ func (s *productService) Delete(context.Context, *product.DeleteReq) (*product.D
 	return nil, nil
 }
 func (s *productService) Get(ctx context.Context, req *product.GetReq) (res *product.GetRes, err error) {
-	pDB := model.Product{}
-	s.DB.First(&pDB, req.Id)
+	pDB, err := s.productRepository.Find(req.Id)
+	if err != nil {
+		return nil, err
+	}
 	//
 	productRet := &product.Product{}
 	pDB.Fill(productRet)
@@ -66,8 +72,11 @@ func main() {
 	lis, _ := net.Listen("tcp", port) // TPC listener
 	grpcServer := grpc.NewServer()
 	// Syntax
-	service := productService{
+	productRepo := repo.ProductRepoImp{
 		DB: db,
+	}
+	service := productService{
+		productRepository: productRepo,
 	}
 	product.RegisterProductServiceServer(grpcServer, &service)
 	// Syntax
