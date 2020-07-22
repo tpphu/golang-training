@@ -32,6 +32,22 @@ docker run --rm -v $(pwd):$(pwd) -w $(pwd) znly/protoc --go_out=plugins=grpc:. -
 
 docker run --rm -v $(pwd):$(pwd) -w $(pwd) znly/protoc --grpc-gateway_out=logtostderr=true:. -I. proto/note.proto
 
+### For gogoproto.moretags
+
+```proto
+syntax = "proto3";
+
+package note;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+# Import cai nay
+# Neu khong proto/note.proto:25:21: Option "(gogoproto.moretags)" unknown.
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+```
+docker run --rm -v $(pwd):$(pwd) -w $(pwd) znly/protoc --gogo_out=plugins=grpc:. -I. proto/note.proto 
+
 ## Build
 
 ```shell

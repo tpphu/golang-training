@@ -5,6 +5,8 @@ package note;
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 
+import "github.com/gogo/protobuf/gogoproto/gogo.proto";
+
 service NoteService {
   rpc Create(NoteReq) returns (Note) {}
   rpc Find(NoteFindReq) returns (Note) {}
@@ -21,8 +23,8 @@ service NoteService {
 }
 
 message Note {
-  int32 id = 1;
-  string title = 2;
+  int32 id = 1 [(gogoproto.moretags) = "bson:\"note_id\""];
+  string title = 2 [(gogoproto.moretags) = "bson:\"title\""];
   bool completed = 3; // Default
   // bool complete = 3; // Only change the name
   // int32 completed = 3; // Change data type 

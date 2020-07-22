@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"sync"
 	"time"
+
+	"golang.org/x/sync/errgroup"
 )
 
 type Respone struct {
@@ -40,50 +41,49 @@ func order(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, s)
 }
 
+// Nhieu may 100/10
+// Distributed system
 func total() int {
 	urls := []string{
-		"https://www.sendo.vn/m/wap_v2/full/san-pham/ao-so-mi-jean-nam-dai-tay-cao-cap-hang-vnxk-31331127?platform=web", // context cancel
-		"https://www.sendo.vn/m/wap_v2/full/san-pham/ao-dui-nam-cao-cap-30157047",                                       // context cancel
-		"https://www.sendo.vn/m/wap_v2/full/san-pham/ao-so-mi-nam-hang-hop-10036141"}                                    //404 ngay lap tuc => no se dc xu ly nhanh hon 2 thang o tren
+		"https://www.sendo.vn/m/wap_v2/full/san-pham/ao-so-mi-jean-nam-dai-tay-cao-cap-hang-vnxk-31331127?platform=web",
+		"https://www.sendo.vn/m/wap_v2/full/san-pham/ao-dui-nam-cao-cap-30157047",
+		"https://www.sendo.vn/m/wap_v2/full/san-pham/ao-so-mi-nam-hang-hop-100361413"}
 
 	total := 0
-	wg := sync.WaitGroup{}
-
-	ctx, cancel := context.WithCancel(context.TODO())
-	defer cancel()
-
-	one := sync.Once{}
+	g, ctx := errgroup.WithContext(context.TODO())
 	for _, url := range urls {
-		wg.Add(1) // wait
-		go func(url string) {
-			defer wg.Done()
+		url := url
+		g.Go(func() error {
+			// Fetch the URL.
 			product, err := getProduct(url, ctx)
 			if err != nil {
-				one.Do(cancel)
-				return
+				return err
 			}
 			total = total + product.Price
-		}(url)
+			return nil
+		})
 	}
-	wg.Wait() //wait
+	if err := g.Wait(); err == nil {
+		fmt.Println("Successfully fetched all URLs.")
+	}
 	return total
 }
 
 func getProduct(url string, ctx context.Context) (*Product, error) {
-	// Xu ly timeout cho URL
 	httpClient := http.Client{
-		Timeout: time.Duration(60 * time.Second), // net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+		// net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+		Timeout: time.Duration(60 * time.Second),
 	}
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		fmt.Println("NewRequest:", err)
 		return nil, err
 	}
-
-	ctx, cancel := context.WithTimeout(ctx, 1*time.Second) // context deadline exceeded
+	// context deadline exceeded
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
+	//
 	req = req.WithContext(ctx)
-	// url van bi goi
 	resp, err := httpClient.Do(req)
 	if err != nil {
 		fmt.Println("httpClient.Do:", err)
