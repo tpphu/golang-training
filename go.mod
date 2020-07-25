@@ -2,6 +2,7 @@ module github.com/tpphu/golang-training
 
 require (
 	github.com/PuerkitoBio/goquery v1.5.1
+	github.com/bsm/sarama-cluster v2.1.15+incompatible // indirect
 	github.com/buger/goterm v0.0.0-20200322175922-2f3e71b85129
 	github.com/c-bata/go-prompt v0.2.3
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -22,9 +23,12 @@ require (
 	github.com/mitchellh/iochan v1.0.0 // indirect
 	github.com/pkg/term v0.0.0-20200520122047-c3ffed290a03 // indirect
 	github.com/stretchr/testify v1.4.0
+	github.com/uber-go/kafka-client v0.2.2
+	github.com/uber-go/tally v3.3.17+incompatible
 	go.elastic.co/apm v1.7.1
 	go.elastic.co/apm/module/apmgin v1.7.1
 	go.elastic.co/apm/module/apmhttp v1.7.1
+	go.uber.org/zap v1.12.0
 	golang.org/x/crypto v0.0.0-20200220183623-bac4c82f6975
 	golang.org/x/net v0.0.0-20200202094626-16171245cfb2
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
