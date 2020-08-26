@@ -10,15 +10,6 @@
       "request": "launch",
       "mode": "debug",
       "program": "${file}"
-    },
-    {
-      "name": "Launch",
-      "type": "go",
-      "request": "launch",
-      "mode": "auto",
-      "program": "${fileDirname}",
-      "env": {},
-      "args": []
     }
   ]
 }

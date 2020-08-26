@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	address = "localhost:50051"
+	address = "localhost:50050"
 )
 
 func main() {
@@ -26,9 +26,12 @@ func testCreate() {
 		Title:     "Todo 123",
 		Completed: true,
 	}
-	res, _ := client.Create(context.TODO(), &req)
+	res, err := client.Create(context.TODO(), &req)
 	// 4. In ket qua
-
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("Response:", res)
 	fmt.Println("Response.Completed:", res.Completed)
 }

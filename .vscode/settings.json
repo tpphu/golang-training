@@ -1,3 +1,8 @@
 {
-    "go.toolsGopath": "${workspaceFolder}"
+    "go.testEnvVars": {
+        "GO111MODULE": "off",
+    },
+    "go.toolsEnvVars": {
+        "GO111MODULE": "off"
+    },
 }

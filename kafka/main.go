@@ -54,7 +54,9 @@ func main() {
 		GroupName:   "sample_consumer",
 		Concurrency: 100, // number of go routines processing messages in parallel
 	}
-	config.Offsets.Initial.Offset = kafka.OffsetOldest
+	// config.Offsets.Initial.Offset = kafka.OffsetOldest
+	config.Offsets.Initial.Offset = kafka.OffsetNewest
+	config.Offsets.Commits.Enabled = true
 
 	// Create the consumer through the previously created client
 	consumer, err := client.NewConsumer(config)

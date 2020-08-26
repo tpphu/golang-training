@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	port = ":50051"
+	port = ":50052"
 )
 
 // Viet cai note service de implement cai service da define
