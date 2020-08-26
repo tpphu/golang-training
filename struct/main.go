@@ -22,6 +22,10 @@ func update2(a A) {
 	a.Y = 2
 }
 
+func update3(someone *int) {
+	*someone = 7
+}
+
 func case1() {
 	b := B{}
 	update1(&b.A)
@@ -34,7 +38,14 @@ func case2() {
 	fmt.Print(b)
 }
 
+func case3() {
+	b := B{}
+	update3(&b.Z)
+	fmt.Print(b)
+}
+
 func main() {
 	case1()
 	case2()
+	case3()
 }
