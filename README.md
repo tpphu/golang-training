@@ -7,12 +7,11 @@
 **[Phu, Tran Phong](https://www.linkedin.com/in/tpphu/)**
 Developer and Instructor
 
-I'm Phu, I'm a developer with a passion for teaching. I'm an academic advisor and instructor at Nordic Coder. My expertise and skills are about big data, distributed system, continuous deployment. I have been teaching many courses about backend and frontend such as Golang/Nodejs/PHP, ES/MySQL and Reactjs/Angular. I've helped students learn to code, improve their skills. I've been invited/collaborated by companies such as ABC, Grab VN to build the courses for training their employees.
+I'm Phu, I'm a developer with a passion for teaching. I'm an academic advisor and instructor at Nordic Coder. My expertise and skills are about big data, distributed system, continuous deployment. I have been teaching many courses about backend and frontend such as Golang/Nodejs/PHP, ES/MySQL and Reactjs/Angular. I've helped students learn to code, improve their skills. I've been invited/collaborated by companies such as ABC to build the courses for training their employees.
 
 I spend most of my time to researching latest methodologies, technologies, skills which should be have for developers to help them learn to make code better, code for fun and love, and make hard concepts easy to understand.
 
 Welcome to my course, I am on way to help you.
-
 ## About this course
 
 This course is designed to get you up and running as fast as possible with Go.  We'll quickly cover the basics, then dive into some of the more advanced features of the language. 
