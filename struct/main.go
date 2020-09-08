@@ -7,6 +7,11 @@ type A struct {
 	Y int
 }
 
+func (a *A) Update() {
+	a.X = 1
+	a.Y = 2
+}
+
 type B struct {
 	A
 	Z int
@@ -44,8 +49,15 @@ func case3() {
 	fmt.Print(b)
 }
 
+func case4() {
+	b := &B{}
+	b.Update()
+	fmt.Print(b)
+}
+
 func main() {
 	case1()
 	case2()
 	case3()
+	case4()
 }
