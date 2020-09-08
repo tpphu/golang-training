@@ -1,0 +1,3 @@
+github.com/uber-go/tally v1.1.0 h1:KifNMkZu+1leHFaXYLw+U95j6bBRfosQq/Fp45qOikY=
+github.com/uber-go/tally v3.3.17+incompatible h1:nFHIuW3VQ22wItiE9kPXic8dEgExWOsVOHwpmoIvsMw=
+github.com/uber-go/tally v3.3.17+incompatible/go.mod h1:YDTIBxdXyOU/sCWilKB4bgyufu1cEi0jdVnRdxvjnmU=
