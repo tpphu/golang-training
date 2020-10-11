@@ -1,0 +1,189 @@
+- id: "01"
+  name: Thành phố Hà Nội
+  districts: []
+- id: "02"
+  name: Tỉnh Hà Giang
+  districts: []
+- id: "04"
+  name: Tỉnh Cao Bằng
+  districts: []
+- id: "06"
+  name: Tỉnh Bắc Kạn
+  districts: []
+- id: "08"
+  name: Tỉnh Tuyên Quang
+  districts: []
+- id: "10"
+  name: Tỉnh Lào Cai
+  districts: []
+- id: "11"
+  name: Tỉnh Điện Biên
+  districts: []
+- id: "12"
+  name: Tỉnh Lai Châu
+  districts: []
+- id: "14"
+  name: Tỉnh Sơn La
+  districts: []
+- id: "15"
+  name: Tỉnh Yên Bái
+  districts: []
+- id: "17"
+  name: Tỉnh Hoà Bình
+  districts: []
+- id: "19"
+  name: Tỉnh Thái Nguyên
+  districts: []
+- id: "20"
+  name: Tỉnh Lạng Sơn
+  districts: []
+- id: "22"
+  name: Tỉnh Quảng Ninh
+  districts: []
+- id: "24"
+  name: Tỉnh Bắc Giang
+  districts: []
+- id: "25"
+  name: Tỉnh Phú Thọ
+  districts: []
+- id: "26"
+  name: Tỉnh Vĩnh Phúc
+  districts: []
+- id: "27"
+  name: Tỉnh Bắc Ninh
+  districts: []
+- id: "30"
+  name: Tỉnh Hải Dương
+  districts: []
+- id: "31"
+  name: Thành phố Hải Phòng
+  districts: []
+- id: "33"
+  name: Tỉnh Hưng Yên
+  districts: []
+- id: "34"
+  name: Tỉnh Thái Bình
+  districts: []
+- id: "35"
+  name: Tỉnh Hà Nam
+  districts: []
+- id: "36"
+  name: Tỉnh Nam Định
+  districts: []
+- id: "37"
+  name: Tỉnh Ninh Bình
+  districts: []
+- id: "38"
+  name: Tỉnh Thanh Hóa
+  districts: []
+- id: "40"
+  name: Tỉnh Nghệ An
+  districts: []
+- id: "42"
+  name: Tỉnh Hà Tĩnh
+  districts: []
+- id: "44"
+  name: Tỉnh Quảng Bình
+  districts: []
+- id: "45"
+  name: Tỉnh Quảng Trị
+  districts: []
+- id: "46"
+  name: Tỉnh Thừa Thiên Huế
+  districts: []
+- id: "48"
+  name: Thành phố Đà Nẵng
+  districts: []
+- id: "49"
+  name: Tỉnh Quảng Nam
+  districts: []
+- id: "51"
+  name: Tỉnh Quảng Ngãi
+  districts: []
+- id: "52"
+  name: Tỉnh Bình Định
+  districts: []
+- id: "54"
+  name: Tỉnh Phú Yên
+  districts: []
+- id: "56"
+  name: Tỉnh Khánh Hòa
+  districts: []
+- id: "58"
+  name: Tỉnh Ninh Thuận
+  districts: []
+- id: "60"
+  name: Tỉnh Bình Thuận
+  districts: []
+- id: "62"
+  name: Tỉnh Kon Tum
+  districts: []
+- id: "64"
+  name: Tỉnh Gia Lai
+  districts: []
+- id: "66"
+  name: Tỉnh Đắk Lắk
+  districts: []
+- id: "67"
+  name: Tỉnh Đắk Nông
+  districts: []
+- id: "68"
+  name: Tỉnh Lâm Đồng
+  districts: []
+- id: "70"
+  name: Tỉnh Bình Phước
+  districts: []
+- id: "72"
+  name: Tỉnh Tây Ninh
+  districts: []
+- id: "74"
+  name: Tỉnh Bình Dương
+  districts: []
+- id: "75"
+  name: Tỉnh Đồng Nai
+  districts: []
+- id: "77"
+  name: Tỉnh Bà Rịa - Vũng Tàu
+  districts: []
+- id: "79"
+  name: Thành phố Hồ Chí Minh
+  districts: []
+- id: "80"
+  name: Tỉnh Long An
+  districts: []
+- id: "82"
+  name: Tỉnh Tiền Giang
+  districts: []
+- id: "83"
+  name: Tỉnh Bến Tre
+  districts: []
+- id: "84"
+  name: Tỉnh Trà Vinh
+  districts: []
+- id: "86"
+  name: Tỉnh Vĩnh Long
+  districts: []
+- id: "87"
+  name: Tỉnh Đồng Tháp
+  districts: []
+- id: "89"
+  name: Tỉnh An Giang
+  districts: []
+- id: "91"
+  name: Tỉnh Kiên Giang
+  districts: []
+- id: "92"
+  name: Thành phố Cần Thơ
+  districts: []
+- id: "93"
+  name: Tỉnh Hậu Giang
+  districts: []
+- id: "94"
+  name: Tỉnh Sóc Trăng
+  districts: []
+- id: "95"
+  name: Tỉnh Bạc Liêu
+  districts: []
+- id: "96"
+  name: Tỉnh Cà Mau
+  districts: []
