@@ -24,13 +24,22 @@ func Sum(arr []int) int { // CPU1
 }
 
 func sum(arr []int, result *int, wg *sync.WaitGroup, key string) int {
+	defer wg.Done()
+	defer func() {
+		fmt.Printf("result | %s | 1\n", key)
+	}()
+	defer func() {
+		fmt.Printf("result | %s | 2\n", key)
+	}()
 	fmt.Println("key:", key)
 	ret := 0
 	for _, v := range arr {
 		ret += v
 	}
+	if ret > 10 {
+		return 0
+	}
 	*result = ret
 	fmt.Printf("result | %s: %d\n", key, *result)
-	defer wg.Done()
 	return ret
 }
