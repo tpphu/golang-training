@@ -6,8 +6,8 @@ import (
 
 func TestIndexOf(t *testing.T) {
 	type args struct {
-		arr  []int
-		find int
+		arr  interface{}
+		find interface{}
 	}
 	tests := []struct {
 		name string
@@ -25,6 +25,20 @@ func TestIndexOf(t *testing.T) {
 		args: args{
 			arr:  []int{1, 2, 3},
 			find: 4,
+		},
+		want: -1,
+	}, {
+		name: "happy case string",
+		args: args{
+			arr:  []string{"a", "b", "c"},
+			find: "a",
+		},
+		want: 0,
+	}, {
+		name: "unhappy case",
+		args: args{
+			arr:  []string{"a", "b", "c"},
+			find: "d",
 		},
 		want: -1,
 	}}
