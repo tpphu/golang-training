@@ -1,0 +1,141 @@
+diff --git a/app/supplychain/bluestone-service/internal/adapter/listing/client.go b/app/supplychain/bluestone-service/internal/adapter/listing/client.go
+index 96efc420..b8c9cc30 100644
+--- a/app/supplychain/bluestone-service/internal/adapter/listing/client.go
++++ b/app/supplychain/bluestone-service/internal/adapter/listing/client.go
+@@ -2,6 +2,7 @@ package listing
+ 
+ import (
+ 	"context"
++	"encoding/json"
+ 	"errors"
+ 	"strings"
+ 	"tekone/library/nap"
+@@ -196,11 +197,22 @@ type ListCategoryResponse struct {
+ 	Message string `json:"message,omitempty"`
+ }
+ 
++func (s *ListProductRequest) MarshalJSON() ([]byte, error) {
++	type Alias ListProductRequest
++	return json.Marshal(&struct {
++		*Alias
++		Skus string `json:"skus,omitempty"`
++	}{
++		Alias: (*Alias)(s),
++		Skus:  strings.Join(s.Skus, ","),
++	})
++}
++
+ func (c *client) ListProduct(ctx context.Context, in *ListProductRequest) ([]Product, error) {
+ 	r := ListProductResponse{}
+ 
+ 	params := make(map[string]string)
+-	if in.Skus != nil && len(in.Skus) > 0 {
++	if len(in.Skus) > 0 {
+ 		params["skus"] = strings.Join(in.Skus, ",")
+ 	}
+ 	if in.Terminal != "" {
+diff --git a/app/supplychain/bluestone-service/internal/adapter/listing/client_test.go b/app/supplychain/bluestone-service/internal/adapter/listing/client_test.go
+new file mode 100644
+index 00000000..7274c549
+--- /dev/null
++++ b/app/supplychain/bluestone-service/internal/adapter/listing/client_test.go
+@@ -0,0 +1,99 @@
++package listing
++
++import (
++	"encoding/json"
++	"reflect"
++	"testing"
++)
++
++func TestListProductRequest_MarshalJSON(t *testing.T) {
++	type fields struct {
++		Terminal    string
++		Page        string
++		Limit       string
++		DisableSign string
++		Channel     string
++		Skus        []string
++	}
++	tests := []struct {
++		name    string
++		fields  fields
++		want    []byte
++		wantErr bool
++	}{{
++		name: "happy case",
++		fields: fields{
++			Page:  "1",
++			Limit: "",
++			Skus:  []string{"1", "2"},
++		},
++		want:    []byte(`{"_page":"1","skus":"1,2"}`),
++		wantErr: false,
++	}}
++	for _, tt := range tests {
++		t.Run(tt.name, func(t *testing.T) {
++			s := &ListProductRequest{
++				Terminal:    tt.fields.Terminal,
++				Page:        tt.fields.Page,
++				Limit:       tt.fields.Limit,
++				DisableSign: tt.fields.DisableSign,
++				Channel:     tt.fields.Channel,
++				Skus:        tt.fields.Skus,
++			}
++			got, err := s.MarshalJSON()
++			if (err != nil) != tt.wantErr {
++				t.Errorf("ListProductRequest.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
++				return
++			}
++			if !reflect.DeepEqual(got, tt.want) {
++				t.Errorf("ListProductRequest.MarshalJSON() = %v, want %v", string(got), string(tt.want))
++			}
++		})
++	}
++}
++
++func TestListProductRequest_MarshalJSON_WithEncoding(t *testing.T) {
++	type fields struct {
++		Terminal    string
++		Page        string
++		Limit       string
++		DisableSign string
++		Channel     string
++		Skus        []string
++	}
++	tests := []struct {
++		name    string
++		fields  fields
++		want    []byte
++		wantErr bool
++	}{{
++		name: "happy case",
++		fields: fields{
++			Page:  "1",
++			Limit: "",
++			Skus:  []string{"1", "2"},
++		},
++		want:    []byte(`{"_page":"1","skus":"1,2"}`),
++		wantErr: false,
++	}}
++	for _, tt := range tests {
++		t.Run(tt.name, func(t *testing.T) {
++			s := &ListProductRequest{
++				Terminal:    tt.fields.Terminal,
++				Page:        tt.fields.Page,
++				Limit:       tt.fields.Limit,
++				DisableSign: tt.fields.DisableSign,
++				Channel:     tt.fields.Channel,
++				Skus:        tt.fields.Skus,
++			}
++			got, err := json.Marshal(s)
++			if (err != nil) != tt.wantErr {
++				t.Errorf("ListProductRequest.MarshalJSON() error = %v, wantErr %v", err, tt.wantErr)
++				return
++			}
++			if !reflect.DeepEqual(got, tt.want) {
++				t.Errorf("ListProductRequest.MarshalJSON() = %v, want %v", string(got), string(tt.want))
++			}
++		})
++	}
++}
