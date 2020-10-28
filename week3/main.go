@@ -1,12 +1,18 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"os"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/microcosm-cc/bluemonday"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type AppErrorCode int
@@ -31,8 +37,18 @@ func main() {
 	|-------------------------------------------------------------------------
 	| Connect to db
 	|-----------------------------------------------------------------------*/
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold: time.Second, // Slow SQL threshold
+			LogLevel:      logger.Info, // Log level
+			Colorful:      false,       // Disable color
+		},
+	)
 	dsn := "default:secret@tcp(127.0.0.1:3306)/dogfood?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: newLogger,
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -100,6 +116,42 @@ func main() {
 			return
 		}
 		c.JSON(200, blog)
+	})
+
+	blogRouter.GET("/", func(c *gin.Context) {
+		blogs := []Blog{}
+		strSize := c.DefaultQuery("size", "2")
+		strPage := c.DefaultQuery("page", "1")
+		q := c.DefaultQuery("q", "")
+		user_ids_str := c.DefaultQuery("user_ids", "")
+		user_ids := []string{}
+		if user_ids_str != "" {
+			user_ids = strings.Split(user_ids_str, ",")
+		}
+		size, _ := strconv.ParseInt(strSize, 10, 32)
+		page, _ := strconv.ParseInt(strPage, 10, 32)
+		builder := db.Limit(int(size)).Offset(int(page)).Order("id desc")
+		if q != "" {
+			/**
+			|-------------------------------------------------------------------------
+			| Khong tot, minh nen tao _search (index field), fulltext search
+			| Analyzer => Filter nhung ky tu khong can thiet html, loai dup tu moi insert
+			|-----------------------------------------------------------------------*/
+			builder.Where(`title LIKE ? OR content LIKE ?`, "%"+q+"%", "%"+q+"%")
+		}
+		if len(user_ids) > 0 {
+			builder.Where(`user_id IN (?)`, user_ids)
+		}
+		if err := builder.Find(&blogs).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code":    ErrDatabase,
+				"message": "Can not list blogs",
+				"detail":  err.Error(),
+			})
+			return
+		}
+		c.JSON(200, blogs)
+		return
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
