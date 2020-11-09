@@ -1,0 +1,22 @@
+syntax = "proto3";
+option go_package = "proto";
+
+service PersonService {
+    rpc CretePerson(CreatePersonRequest) returns (Person);
+    rpc GetPerson(GetPersonRequest) returns (Person);
+}
+
+message CreatePersonRequest{
+    string name = 2;
+    string fullname = 3;
+}
+
+message GetPersonRequest{
+    int32 id = 1;
+}
+
+message Person {
+    int32 id = 1;
+    string name = 2;
+    string fullname = 3;
+}
