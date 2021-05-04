@@ -1,6 +1,18 @@
 # A tour of Go
 
 ## Hello world
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+func main() {
+    fmt.Println("Hello world")
+}
+```
 ## Go Packages
 ### Private
 ### Public
