@@ -31,3 +31,11 @@ func Test_Sum_2(t *testing.T) {
 		t.Errorf("Actual %v is not equal to expect %v", actual, expect)
 	}
 }
+
+func Test_Add(t *testing.T) {
+	actual := Add(1, 2)
+	expect := 3
+	if actual != expect {
+		t.Errorf("Actual %v is not equal to expect %v", actual, expect)
+	}
+}

@@ -7,3 +7,7 @@ func Sum(arr ...int) int {
 	}
 	return sum
 }
+
+func Add(x int, y int) int {
+	return x + y + 4
+}
