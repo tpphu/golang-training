@@ -1,0 +1,10 @@
+- id: 1
+  name: Phu 1
+  yearofbirth: 1986
+- id: 2
+  name: Phu 2
+  yearofbirth: 1987
+- id: 3
+  name: Phu 3
+  yearofbirth: 1988
+
