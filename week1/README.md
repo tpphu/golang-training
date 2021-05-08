@@ -16,9 +16,10 @@ func main() {
 ## Go Packages
 ### Private
 ### Public
+### Expose
 ## Variables
 ### Default value
-### String/Rune
+### String/Rune(UTF8)
 ## Function
 ### Arguments
 ### Multiple returns values
@@ -35,5 +36,7 @@ func main() {
 # TDD practicing 
 
 ## Cloning Lodash/Underscore
+
+## Goroutine & Channel
 
 
