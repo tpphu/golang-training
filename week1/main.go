@@ -18,6 +18,11 @@ type Person struct {
 }
 
 func main() {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println(err)
+		}
+	}()
 	// _, err := os.Open("input.csv")
 	file, err := os.Open("data/input.csv")
 	// defer file.Close()

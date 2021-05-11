@@ -1,0 +1,9 @@
+- Discover goroutines, channel, defer, panic, recover
+- Error handling in Go
+- Golang context
+- Golang reflect
+- A guide to setting up Docker/Laradock to install MySQL
+- Working with database/Mysql
+- DB connection pool
+- Exercise: CURD with Gorm
+- Homework: write Unit Test and learn about mock test for DB
