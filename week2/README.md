@@ -7,3 +7,8 @@
 - DB connection pool
 - Exercise: CURD with Gorm
 - Homework: write Unit Test and learn about mock test for DB
+
+Doc:
+
+- https://github.com/laradock/laradock
+- https://gorm.io/docs/index.html
