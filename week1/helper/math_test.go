@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -83,3 +84,24 @@ func TestFindMax_HappyCase(t *testing.T) {
 		t.Error("Error should be nil")
 	}
 }
+
+func TestPointer(t *testing.T) {
+	// var n int = 10
+	// var p *int = &n
+	n := 10 // Khai bao va gan gia tri
+	p := &n
+
+	fmt.Println("&n", &n, "n", n)
+	fmt.Println("&p", &p, "p", p)
+	fmt.Println("*p", *p)
+	n = 11 // Change n
+	fmt.Println("*p", *p)
+	m := 999
+	p = &m
+	fmt.Println("*p", *p)
+	*p = 1000
+	fmt.Println("m", m) // 1000
+	fmt.Println("n", n) // 11
+}
+
+// Struct & Function
