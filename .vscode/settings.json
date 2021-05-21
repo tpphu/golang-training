@@ -1,10 +1,4 @@
 {
-    "go.testEnvVars": {
-        "GO111MODULE": "off",
-    },
-    "go.toolsEnvVars": {
-        "GO111MODULE": "off"
-    },
     "cSpell.words": [
         "phudt"
     ],

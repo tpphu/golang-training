@@ -18,14 +18,15 @@ func Job(c *cli.Context) error {
 	fmt.Println("flag x:", x)
 	fmt.Println("This is job app - sau khi refactor")
 	// Bai Tap: Lam sao de lay cac gia tri nay tu Environment
-	dsn := "root:root@tcp(127.0.0.1:3306)/covid?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn := "root:root@tcp(127.0.0.1:3306)/covid?charset=utf8mb4&12parseTime=True&loc=Local"
+	db, _ := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	sqlDB, err := db.DB()
 	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
-	db.SetMaxIdleConns(10)
+	sqlDB.SetMaxIdleConns(10)
 	// SetMaxOpenConns sets the maximum number of open connections to the database.
-	db.SetMaxOpenConns(100)
+	sqlDB.SetMaxOpenConns(100)
 	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
-	db.SetConnMaxLifetime(time.Hour)
+	sqlDB.SetConnMaxLifetime(time.Hour)
 	if err != nil {
 		fmt.Println("Connect to db:", err)
 		return err
