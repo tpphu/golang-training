@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option go_package = "phudt/week4/internal/api;api";
+
+service PatientService{
+    rpc Add(AddRequest) returns (Patient) {};
+}
+
+message AddRequest {
+    string fullname = 2;
+	string address  = 3;
+    string birthday = 4;
+	Gender gender = 5;
+	int32 age= 6;
+}
+
+message Patient {
+    int64 id = 1;
+	string fullname = 2;
+	string address  = 3;
+    string birthday = 4;
+	Gender gender = 5;
+	int32 age= 6;
+}
+
+enum Gender {
+    UNKNOWN = 0;
+    MALE = 1;
+    FEMALE = 2;
+    OTHER = 3;
+}

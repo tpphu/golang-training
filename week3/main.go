@@ -6,6 +6,7 @@ import (
 	"os"
 	"sync"
 
+	"phudt/week3/internal/handler"
 	"phudt/week3/internal/model"
 
 	"github.com/gin-gonic/gin"
@@ -57,19 +58,9 @@ func main() {
 	| List
 	| Delete: Không có delete dữ liệu. (soft delete) -> hide, active/delete
 	|-----------------------------------------------------------------------*/
-	r.POST("/patient", func(c *gin.Context) {
-		patient := model.Patient{}
-		if err := c.ShouldBindJSON(&patient); err != nil {
-			c.String(http.StatusInternalServerError, err.Error())
-			return
-		}
-		err = db.Create(&patient).Error
-		if err != nil {
-			c.String(http.StatusInternalServerError, err.Error())
-			return
-		}
-		c.JSON(http.StatusOK, patient)
-	})
+	handler := handler.NewPatient(db)
+	r.POST("/patient", handler.PatientCreate)
+
 	r.GET("/patient/:id", func(c *gin.Context) {
 		id := c.Param("id")
 		if id == "" {
