@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/gin-gonic/gin v1.7.1
+	github.com/stretchr/testify v1.5.1
 	github.com/urfave/cli/v2 v2.3.0
 	google.golang.org/grpc v1.38.0
 	google.golang.org/protobuf v1.26.0
