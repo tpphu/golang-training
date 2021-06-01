@@ -16,8 +16,10 @@ Tram + Tuyen
 
 - Gen file pb, gprc tu cai file proto
 - Tao dc client/server
-- Tao GRCP Gateway
+- Tao GRCP Gateway/De goi HTTP
 - Gen ra swagger
+- Viet cac func CRUD
+- Viet dc Interceptor/(HTTP Middleware)
 
 Đỗ Anh Tuấn
 Phạm Thanh Bạch
