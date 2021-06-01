@@ -45,8 +45,19 @@ func TestPatientTestSuite(t *testing.T) {
 	suite.Run(t, new(PatientTestSuite))
 }
 
-func (suite *PatientTestSuite) TestCreate() {
-	// input
+func (s *PatientTestSuite) TestCreate() {
+	/**
+	|-------------------------------------------------------------------------
+	| Input
+	|-----------------------------------------------------------------------*/
+	var expectedId int64 = 3
+	// Mock SQL Query
+	sql := "INSERT INTO `patient` (`fullname`,`address`,`birthday`,`gender`,`age`) VALUES (?,?,?,?,?)"
+	s.mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(expectedId, 1))
+	/**
+	|-------------------------------------------------------------------------
+	| Our code
+	|-----------------------------------------------------------------------*/
 	m := model.Patient{
 		Fullname: "Tran Phong Phu",
 		Address:  "HCM",
@@ -54,19 +65,15 @@ func (suite *PatientTestSuite) TestCreate() {
 		Gender:   1,
 		Age:      10,
 	}
-	// Mock SQL Query
-	var expectedId int64 = 3
-	sql := "INSERT INTO `patient` (`fullname`,`address`,`birthday`,`gender`,`age`) VALUES (?,?,?,?,?)"
-	suite.mock.ExpectExec(sql).WillReturnResult(sqlmock.NewResult(expectedId, 1))
-	// Excute
-	actual, err := suite.repo.Create(m)
+	actual, err := s.repo.Create(m)
+	// Assertion
 	if err != nil {
-		suite.Error(err, "Should not return error here")
+		s.Error(err, "Should not return error here")
 	}
 	if actual.Id != expectedId {
-		suite.Fail("should return expected id", "expectedId", expectedId, "actualId", actual.Id)
+		s.Fail("should return expected id", "expectedId", expectedId, "actualId", actual.Id)
 	}
-	if err := suite.mock.ExpectationsWereMet(); err != nil {
-		suite.Error(err, "there were unfulfilled expectations")
-	}
+	// if err := suite.mock.ExpectationsWereMet(); err != nil {
+	// 	suite.Error(err, "there were unfulfilled expectations")
+	// }
 }

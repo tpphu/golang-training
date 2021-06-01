@@ -35,6 +35,7 @@ func NewPatientRepo(db *gorm.DB) Patient {
 	return &patient{db: db}
 }
 
+// Code => Viet UT
 func (r *patient) Create(m model.Patient) (*model.Patient, error) {
 	result := &m
 	err := r.db.Create(result).Error

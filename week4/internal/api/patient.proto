@@ -4,6 +4,38 @@ option go_package = "phudt/week4/internal/api;api";
 
 service PatientService{
     rpc Add(AddRequest) returns (Patient) {};
+    rpc List(ListRequest) returns (ListResponse) {};
+}
+
+message ListRequest{
+    string q = 1;
+    int32 page = 2;
+    int32 limit = 3;
+    Sort sort = 4;
+    repeated Filter filters = 5;
+}
+
+message ListResponse {
+    int32 total = 1;
+    repeated Patient patients = 2;
+}
+
+message Sort {
+    string field = 1;
+    bool isAsc = 2;
+}
+
+message Filter {
+    string field = 1;
+    string compare = 2;
+    string value1 = 3;
+    string value2 = 4;
+}
+
+enum FilterCompare {
+    Undefined = 0;
+    Equal = 1;
+    Greater = 2;
 }
 
 message AddRequest {

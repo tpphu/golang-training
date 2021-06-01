@@ -13,6 +13,7 @@ import (
 
 	cli "github.com/urfave/cli/v2"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -20,6 +21,10 @@ import (
 var (
 	port    = "0.0.0.0:50000"
 	connStr = "localhost:50000"
+)
+
+const (
+	KEY = "Authentication"
 )
 
 func main() {
@@ -79,7 +84,18 @@ func serverAction(c *cli.Context) error {
 	patientRepo := repo.NewPatientRepo(db)
 	srv := service.NewService(patientRepo)
 	//
-	s := grpc.NewServer()
+	myInterceptor := func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+		md, ok := metadata.FromIncomingContext(ctx)
+		if ok {
+			keys := md.Get(KEY)
+			if len(keys) > 0 {
+				authentication := keys[0]
+				fmt.Println(authentication)
+			}
+		}
+		return handler(ctx, req)
+	}
+	s := grpc.NewServer(grpc.UnaryInterceptor(myInterceptor))
 	api.RegisterPatientServiceServer(s, &srv)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

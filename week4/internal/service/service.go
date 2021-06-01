@@ -35,7 +35,7 @@ func mutateModelToAddAddResponse(m *model.Patient) *api.Patient {
 	return p
 }
 
-func (s *service) Add(_ context.Context, in *api.AddRequest) (*api.Patient, error) {
+func (s *service) Add(ctx context.Context, in *api.AddRequest) (*api.Patient, error) {
 	// TODO: Can suy nghi cho dat ten bien nay
 	patient := mutateAddRequestToModel(in)
 	p, err := s.patientRepo.Create(*patient)
